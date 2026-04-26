@@ -490,7 +490,7 @@ function ingame(dt, time) {
                         ac.element.style.display = "none";
                     }
                 }
-                if (ac.killTimer >= ac.killTimer) {
+                if (ac.killTimer >= ac.killTime) {
                     die("baby");
                 }
             }
@@ -725,7 +725,16 @@ function ingame(dt, time) {
             if (ac.moveTimer == 0.1) {
                 ac.rng = Math.random() + 0.5;
             }
-            if (!doors[1]) {
+            let ennardVent = false;
+            for (let a = 0; a<activeCharacters.length; a++) {
+                let ac2 = activeCharacters[a];
+                if (ac2.name == "ennard") {
+                    if (ac2.side == 1) {
+                        ennardVent = true;
+                    }
+                }
+            }
+            if (!doors[1] && !ennardVent) {
                 ac.moveTimer += dt * (ac.difficulty / 10+1);
             }
             if (ac.moveTimer >= ac.moveTime) {
@@ -736,12 +745,16 @@ function ingame(dt, time) {
                 if (ac.phase == 3) {sfx.bidybabBang.pause(); sfx.bidybabBang.currentTime = 0; sfx.bidybabBang.play(); shakeIntensity = 3;}
                 if (ac.phase == 4) {die("bidybab")}
             }
-            if (ac.phase != 0 && cams.cam == 4)
-                if (ac.phase >= 4) {
-                    document.getElementById("camsBG").style.backgroundImage = "url(assets/bidybab/3.png)";
-                } else {
-                    document.getElementById("camsBG").style.backgroundImage = "url(assets/bidybab/" + ac.phase + ".png)";
+            if (!ennardVent) {
+                if (ac.phase != 0 && cams.cam == 4) {
+                    if (ac.phase >= 4) {
+                        document.getElementById("camsBG").style.backgroundImage = "url(assets/bidybab/3.png)";
+                    } else {
+                        document.getElementById("camsBG").style.backgroundImage = "url(assets/bidybab/" + ac.phase + ".png)";
+                    }
                 }
+            }
+
             if (cams.cam == 4 && shocking) {
                 ac.phase--;
                 if (ac.phase == -1) {

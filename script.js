@@ -384,7 +384,10 @@ function ingame(dt, time) {
         mask = false;
         ingameTimer = 0;
         power = 100;
+        oxygen = 100;
+        ingameTimer = 0;
         activeCharacters = [];
+        shakeIntensity = 0;
         for (let i = 0; i<characters.length; i++) {
             if (characters[i].element != null)
                 characters[i].element.style.display = "none";
@@ -393,6 +396,7 @@ function ingame(dt, time) {
             }
         }
     }
+    ingameTimer += dt;
     document.getElementById("officeBG").style.backgroundPosition = mouse.x / window.innerWidth * 100 + "%" + mouse.y / window.innerWidth * 100 + "%";
     document.getElementById("leftDoor").style.backgroundPosition = mouse.x / window.innerWidth * 100 + "%" + mouse.y / window.innerWidth * 100 + "%";
     document.getElementById("rightDoor").style.backgroundPosition = mouse.x / window.innerWidth * 100 + "%" + mouse.y / window.innerWidth * 100 + "%";
@@ -837,7 +841,7 @@ function ingame(dt, time) {
         keys[key] = false;
     }
     shocking = false;
-    power -= powerDrain * dt / 2;
+    power -= powerDrain * dt / 2; // pp /1;
 }
 function menu(dt, time) {
     if (!firstFrame[0]) {

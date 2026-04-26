@@ -73,7 +73,7 @@ let characters = [
         name: "ennard",
         rng: 0.5,
         moveTimer: 0,
-        moveTime: 8, // pp 5mt
+        moveTime: 18, // pp 5mt
         killTimer: 0,
         killTime: 4,
         leaveTimer: 0,
@@ -98,7 +98,7 @@ let characters = [
         menuImg: "assets/characterSelect/bidybab.png",
         difficulty: 0,
         element: null,
-        description: "appears in the top vent shock him to make him go back before he kills you",
+        description: "appears in the top vent shock him to make him go back before he kills you. If ennard is in the vent bidybab doesnt move",
     },
     {
         name: "electrobab",
@@ -143,7 +143,7 @@ let characters = [
         description: "press the number on the top of your screen or he will take your power"
     },
     {
-        name: "minireena 2",
+        name: "minireena 1",
         rng: 0.5,
         moveTimer: 0,
         moveTime: 15,
@@ -154,14 +154,14 @@ let characters = [
         description: "appears in the cams but will be highlighted hes taking your oxygen"
     },
     {
-        name: "minireena 1",
+        name: "minireena 2",
         rng: 0.5,
         moveTimer: 0,
         moveTime: 8,
         killTimer: 0,
         killTime: 5,
         leaveTimer: 0,
-        leaveTime: 0.5,
+        leaveTime: 0.25,
         side: 0,
         camsOpened: false,
         sequence: 0,
@@ -171,6 +171,29 @@ let characters = [
         difficulty: 0,
         element: document.getElementById("minireena"),
         description: "he has a 20% chance to appear when you close cams put the mask on"
+    },
+    {
+        name: "NotThatBruh",
+        rng: 0.5,
+        moveTimer: 0,
+        moveTime: 60,
+        killTimer: 0,
+        killTime: 1,
+        leaveTimer: 0,
+        leaveTime: 0.1,
+        menuImg: "assets/characterSelect/notThatBruh.png",
+        difficulty: 0,
+        element: null,
+        description: "he will make a voiceline before he makes loud banging noises close the top vent",
+    },
+    {
+        name: "glungus",
+        x: 0,
+        y: 0,
+        menuImg: "assets/characterSelect/glungus.png",
+        difficulty: 0,
+        element: document.getElementById("glungus"),
+        description: "glungus follows your mouse.",
     },
 ];
 let activeCharacters = [];
@@ -191,6 +214,11 @@ const sounds = {
     bidybabBang: "assets/soundEffects/bidybabBang.mp3",
     bonnet: "assets/soundEffects/bonnet.ogg",
     lolbit: "assets/soundEffects/LOL.ogg",
+    mask: "assets/soundEffects/mask.mp3",
+    doorClose: "assets/soundEffects/doorClose.mp3",
+    ntbVoiceLine: "assets/soundEffects/notThatBruhVoiceLine.mp3",
+    ntb: "assets/soundEffects/notThatBruh.mp3",
+    ambience: "assets/soundEffects/ambience.mp3",
 }
 let sfx = {};
 for (let key in sounds) {
@@ -270,7 +298,7 @@ document.getElementById("characters").addEventListener("mousedown", (e) => {
     }
 });
 document.getElementById("characters").addEventListener("mousemove", (e) => {
-    if (e.target.id == "characters") {return; document.getElementById("characterDescription").style.display = "none";};
+    if (e.target.id == "characters") {document.getElementById("characterDescription").style.display = "none"; return;};
     document.getElementById("characterDescription").style.display = "block";
     document.getElementById("charName").textContent = characters[e.target.id.match(/(\d+)/)[0]].name;
     document.getElementById("charDescription").textContent = characters[e.target.id.match(/(\d+)/)[0]].description;
@@ -314,59 +342,74 @@ let shocking = false;
 let shockTransition = 0;
 window.addEventListener("keydown", (e) => {
     keys[e.key.toLowerCase()] = true;
-    if (e.key.toLowerCase() == "a") {
-        doors[0] = !doors[0];
-        if (doors[0]) {
-            document.getElementById("leftDoor").style.display = "block";
-        } else {
-            document.getElementById("leftDoor").style.display = "none";
+    if (scene == "ingame") {
+        if (e.key.toLowerCase() == "a") {
+            doors[0] = !doors[0];
+            sfx.doorClose.pause();
+            sfx.doorClose.currentTime = 0;
+            sfx.doorClose.play();
+            if (doors[0]) {
+                document.getElementById("leftDoor").style.display = "block";
+            } else {
+                document.getElementById("leftDoor").style.display = "none";
+            }
+        }
+        if (e.key.toLowerCase() == "w") {
+            doors[1] = !doors[1];
+            sfx.doorClose.pause();
+            sfx.doorClose.currentTime = 0;
+            sfx.doorClose.play();
+            if (doors[1]) {
+                document.getElementById("vent").style.display = "block";
+            } else {
+                document.getElementById("vent").style.display = "none";
+            }
+        }
+        if (e.key.toLowerCase() == "d") {
+            doors[2] = !doors[2];
+            sfx.doorClose.pause();
+            sfx.doorClose.currentTime = 0;
+            sfx.doorClose.play();
+            if (doors[2]) {
+                document.getElementById("rightDoor").style.display = "block";
+            } else {
+                document.getElementById("rightDoor").style.display = "none";
+            }
+        }
+        if (e.key.toLowerCase() == "s") {
+            cams.opened = !cams.opened;
+            if (mask) {
+                cams.opened = false;
+            }
+            camStatic = 1;
+            if (cams.opened) {
+                document.getElementById("cams").style.display = "block";
+            } else {
+                document.getElementById("cams").style.display = "none";
+            }
+        }
+        if (e.key.toLowerCase() == " ") {
+            if (!cams.opened) {
+                mask = !mask;
+                sfx.mask.pause();
+                sfx.mask.currentTime = 0;
+                sfx.mask.play();
+            }
+            if (mask) {
+                document.getElementById("mask").style.display = "block";
+            } else {
+                document.getElementById("mask").style.display = "none";
+            }
+        }
+        if (e.key.toLowerCase() == "e" && cams.opened) {
+            shocking = true;
+            shockTransition = 0.6;
+            sfx.shock.pause();
+            sfx.shock.currentTime = 0;;
+            sfx.shock.play();
         }
     }
-    if (e.key.toLowerCase() == "w") {
-        doors[1] = !doors[1];
-        if (doors[1]) {
-            document.getElementById("vent").style.display = "block";
-        } else {
-            document.getElementById("vent").style.display = "none";
-        }
-    }
-    if (e.key.toLowerCase() == "d") {
-        doors[2] = !doors[2];
-        if (doors[2]) {
-            document.getElementById("rightDoor").style.display = "block";
-        } else {
-            document.getElementById("rightDoor").style.display = "none";
-        }
-    }
-    if (e.key.toLowerCase() == "s") {
-        cams.opened = !cams.opened;
-        if (mask) {
-            cams.opened = false;
-        }
-        camStatic = 1;
-        if (cams.opened) {
-            document.getElementById("cams").style.display = "block";
-        } else {
-            document.getElementById("cams").style.display = "none";
-        }
-    }
-    if (e.key.toLowerCase() == " ") {
-        if (!cams.opened) {
-            mask = !mask;
-        }
-        if (mask) {
-            document.getElementById("mask").style.display = "block";
-        } else {
-            document.getElementById("mask").style.display = "none";
-        }
-    }
-    if (e.key.toLowerCase() == "e" && cams.opened) {
-        shocking = true;
-        shockTransition = 0.6;
-        sfx.shock.pause();
-        sfx.shock.currentTime = 0;;
-        sfx.shock.play();
-    }
+
 });
 window.addEventListener("keyup", (e) => {
     keys[e.key.toLowerCase()] = false;
@@ -394,7 +437,7 @@ const textDisplay = [
 document.getElementById("bonnetHitbox").addEventListener("mousedown", (e) => {
     for (let i = 0; i<activeCharacters.length; i++) {
         if (activeCharacters[i].name == "bonnet") {
-            activeCharacters[i].moveTime[0] = 0;
+            activeCharacters[i].moveTimer = 0;
             activeCharacters[i].x = 110;
             sfx.bonnet.pause();
             sfx.bonnet.currentTime = 0;
@@ -441,6 +484,7 @@ function ingame(dt, time) {
         }
         console.log(activeCharacters, characters);
     }
+    sfx.ambience.play();
     ingameTimer += dt;
     document.getElementById("officeBG").style.backgroundPosition = mouse.x / window.innerWidth * 100 + "%" + mouse.y / window.innerWidth * 100 + "%";
     document.getElementById("leftDoor").style.backgroundPosition = mouse.x / window.innerWidth * 100 + "%" + mouse.y / window.innerWidth * 100 + "%";
@@ -836,7 +880,7 @@ function ingame(dt, time) {
             } else {
                 ac.element.style.display = "none";
             }
-        } else if (ac.name == "minireena 1") {
+        } else if (ac.name == "minireena 2") {
             if (cams.opened) {
                 ac.camsOpened = true;
                 if (ac.active) {
@@ -863,7 +907,7 @@ function ingame(dt, time) {
             } else {
                 ac.element.style.display = "none";
             }
-        } else if (ac.name == "minireena 2") {
+        } else if (ac.name == "minireena 1") {
             if (ac.moveTimer === 0) {
                 ac.rng = Math.random() + 0.5;
             }
@@ -884,6 +928,43 @@ function ingame(dt, time) {
                     }
                 }
             }
+        } else if (ac.name == "NotThatBruh") {
+            if (ac.moveTimer === 0) {
+                ac.rng = Math.random() + 0.5;
+            }
+            ac.moveTimer += dt * (ac.difficulty / 10 +1) * ac.rng;
+            if (ac.moveTimer >= ac.moveTime-4*(ac.difficulty / 10 +1) && ac.moveTimer <= ac.moveTime-3*(ac.difficulty / 10 +1)) {
+                sfx.ntbVoiceLine.play();
+            }
+            if (ac.moveTimer >= ac.moveTime) {
+                ac.killTimer += dt;
+                sfx.ntb.play();
+                if (doors[1]) {
+                    ac.leaveTimer += dt;
+                    if (ac.leaveTimer >= ac.leaveTime) {
+                        ac.leaveTimer = 0;
+                        ac.killTimer = 0;
+                        ac.moveTimer = 0;
+                        sfx.bonk.pause();
+                        sfx.bonk.currentTime = 0;
+                        sfx.bonk.play();
+                        sfx.ntb.currentTime = 0;
+                        sfx.ntb.pause();
+                    }
+                } else {
+                    if (ac.killTimer >= ac.killTime) {
+                        die("NotThatBruh");
+                    }
+                }
+            }
+        } else if (ac.name == "glungus") {
+            let percMouseX = mouse.x / window.innerWidth * 100;
+            let percMouseY = mouse.y / window.innerHeight * 100;
+            ac.x = ac.x * (1 - dt * (ac.difficulty/10+1)) + percMouseX * dt * (ac.difficulty/10+1);
+            ac.y = ac.y * (1 - dt * (ac.difficulty/10+1)) + percMouseY * dt * (ac.difficulty/10+1);
+            ac.element.style.left = ac.x + "vw";
+            ac.element.style.top = ac.y + "vh";
+            ac.element.style.display = "block";
         }
     }
     oxygen += dt * 10;

@@ -100,7 +100,7 @@ const characters = [
     {
         name: "lolbit",
         rng: 0.5,
-        moveTime: [0,15],
+        moveTime: [0,30], // pp mt 15
         killTime: [0,5],
         side: 0,
         camsOpened: false,
@@ -122,7 +122,20 @@ const characters = [
         index: 0,
         menuImg: "assets/characterSelect/minireena.png",
         difficulty: 0,
-        element: document.getElementById("lolbit"),
+        element: null,
+    },
+    {
+        name: "minireena 2",
+        rng: 0.5,
+        moveTime: [0,15],
+        killTime: [0,5],
+        side: 0,
+        camsOpened: false,
+        sequence: 0,
+        index: 0,
+        menuImg: "assets/characterSelect/minireena2.png",
+        difficulty: 0,
+        element: null,
     },
 ];
 let activeCharacters = [];
@@ -264,6 +277,9 @@ window.addEventListener("keydown", (e) => {
     }
     if (e.key.toLowerCase() == "s") {
         cams.opened = !cams.opened;
+        if (mask) {
+            cams.opened = false;
+        }
         camStatic = 1;
         if (cams.opened) {
             document.getElementById("cams").style.display = "block";
@@ -272,7 +288,14 @@ window.addEventListener("keydown", (e) => {
         }
     }
     if (e.key.toLowerCase() == " ") {
-        mask = !mask;
+        if (!cams.opened) {
+            mask = !mask;
+        }
+        if (mask) {
+            document.getElementById("mask").style.display = "block";
+        } else {
+            document.getElementById("mask").style.display = "none";
+        }
     }
     if (e.key.toLowerCase() == "e" && cams.opened) {
         shocking = true;
@@ -710,7 +733,7 @@ function ingame(dt, time) {
                     }
                 }
                 sfx.lolbit.play();
-                ac.killTime[0] += dt * ac.killTime[0]+dt/4;
+                ac.killTime[0] += dt * ac.killTime[0]+dt/8; // pp /2
                 powerDrain += ac.killTime[0];
             } else {
                 ac.element.style.display = "none";
@@ -735,20 +758,42 @@ function menu(dt, time) {
         document.getElementById("menu").style.display = "block";
         document.getElementById("ingame").style.display = "none";
         document.getElementById("pirate").style.display = "none";
+        saveFile.pirate = true;
     }
     document.getElementById("menuBG").style.backgroundPositionX = -time / 100 + "vw";
 }
 function die(killer) {
-    console.log("dead to " + killer);
+    scene = "dead";
+    document.getElementById("killerText").textContent = "yuo deid to " + killer;
 }
 document.getElementById("antiPirate").addEventListener("change", (e) => {
     if (document.getElementById("antiPirate").files.length === 1) {
         console.log("file selected:", document.getElementById("antiPirate").files[0]);
         if (document.getElementById("antiPirate").files[0].name == "SisterLocation.exe") {
             scene = "menu";
+            pirate = true;
+            save();
         }
     }
 });
+let pirate = false;
+let saveFile = {
+    pirate: false,
+}
+function save() {
+    saveFile = {
+        pirate: pirate,
+    }
+    localStorage.setItem("dataSL", JSON.stringify(saveFile));
+}
+function load() {
+    let data = localStorage.getItem("dataSL");
+    let dataParsed = JSON.parse(data);
+    console.log(dataParsed)
+    if (dataParsed == null) return;
+    if (dataParsed.pirate !== undefined) pirate = dataParsed.pirate;
+}
+load();
 function update(time) {
     const dt = (time - lastTime) / 1000;
     lastTime = time;
@@ -756,6 +801,10 @@ function update(time) {
         ingame(dt, time)
     } else if (scene == "menu") {
         menu(dt, time);
+    } else if (scene == "pirate") {
+        if (pirate) {
+            scene = "menu";
+        }
     }
     requestAnimationFrame(update);
 }

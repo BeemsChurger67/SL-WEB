@@ -269,3 +269,29 @@ body {
     color: white;
 
 }
+#mask {
+    position: absolute;
+    display: none;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url(assets/mask.png);
+    background-size: 100% 100%;
+    pointer-events: none;
+}
+#deathBackground {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+}
+#killerText {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    font-size: 10vh;
+    color: red;
+}

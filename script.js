@@ -219,6 +219,7 @@ const sounds = {
     ntbVoiceLine: "assets/soundEffects/notThatBruhVoiceLine.mp3",
     ntb: "assets/soundEffects/notThatBruh.mp3",
     ambience: "assets/soundEffects/ambience.mp3",
+    win: "assets/soundEffects/win.mp3",
 }
 let sfx = {};
 for (let key in sounds) {
@@ -409,7 +410,6 @@ window.addEventListener("keydown", (e) => {
             sfx.shock.play();
         }
     }
-
 });
 window.addEventListener("keyup", (e) => {
     keys[e.key.toLowerCase()] = false;
@@ -444,6 +444,7 @@ document.getElementById("bonnetHitbox").addEventListener("mousedown", (e) => {
         }
     }
 });
+let winOpacity = 0;
 function ingame(dt, time) {
     if (!firstFrame[1]) {
         resetFF();
@@ -469,6 +470,7 @@ function ingame(dt, time) {
         ingameTimer = 0;
         activeCharacters = [];
         shakeIntensity = 0;
+        winOpacity = 0;
         for (let i = 0; i<characters.length; i++) {
             if (characters[i].element != null)
                 characters[i].element.style.display = "none";
@@ -478,14 +480,19 @@ function ingame(dt, time) {
         }
         for (let i = 0; i<activeCharacters.length; i++) {
             let ac = activeCharacters[i];
-            if (ac.name == "minireena 2") {
+            if (ac.name == "minireena 1") {
                 ac.minireenas = [];
             }
         }
-        console.log(activeCharacters, characters);
     }
     sfx.ambience.play();
     ingameTimer += dt;
+    let seconds = ingameTimer % 60;
+    document.getElementById("ingameTimer").textContent = textDisplay[Math.floor(ingameTimer/60)];
+    document.getElementById("ingameTimer2").textContent = Math.floor(ingameTimer/60) + (seconds > 10 ? ":" : ":0") + Math.floor(seconds);
+    if (ingameTimer >= 360) {
+        scene = "win";
+    }
     document.getElementById("officeBG").style.backgroundPosition = mouse.x / window.innerWidth * 100 + "%" + mouse.y / window.innerWidth * 100 + "%";
     document.getElementById("leftDoor").style.backgroundPosition = mouse.x / window.innerWidth * 100 + "%" + mouse.y / window.innerWidth * 100 + "%";
     document.getElementById("rightDoor").style.backgroundPosition = mouse.x / window.innerWidth * 100 + "%" + mouse.y / window.innerWidth * 100 + "%";
@@ -795,7 +802,7 @@ function ingame(dt, time) {
                         document.getElementById("camsBG").style.backgroundImage = "url(assets/bidybab/3.png)";
                     } else {
                         document.getElementById("camsBG").style.backgroundImage = "url(assets/bidybab/" + ac.phase + ".png)";
-                    }
+                    }   
                 }
             }
 
@@ -848,7 +855,7 @@ function ingame(dt, time) {
             }
         } else if (ac.name == "lolbit") {
             if (ac.moveTimer === 0) {
-                ac.sequence = Math.round(Math.random() * 7+1);
+                ac.sequence = Math.round(Math.random() * 2+1); // pp 7
                 ac.rng = Math.random() +0.5;
             }
             ac.moveTimer += dt * (ac.difficulty / 10 +1) * ac.rng;
@@ -918,7 +925,7 @@ function ingame(dt, time) {
             }
             ac.element.style.display = "none";
             for (let a = 0; a<ac.minireenas.length; a++) {
-                ac.minireenas[a][1] += dt * ac.minireenas[a][1]+dt/40;
+                ac.minireenas[a][1] += (dt * ac.minireenas[a][1]+dt)/50;
                 oxygen -= ac.minireenas[a][1];
                 document.getElementById("cam" + (ac.minireenas[a][0]+1)).style.animationName = "camAnim";
                 if (cams.cam == ac.minireenas[a][0]) {
@@ -1008,6 +1015,29 @@ function die(killer) {
     document.getElementById("ingame").style.display = "none";
     document.getElementById("deathScreen").style.display = "block";
 }
+let winTime = 0;
+function win(dt,time) {
+    if (!firstFrame[2]) {
+        resetFF();
+        firstFrame[2] = true;
+        winOpacity = 0;
+        for (let key in sfx) {
+            sfx[key].pause();
+            sfx[key].currentTime = 0;
+        }
+        sfx.win.play();
+        winTime = 0;
+        document.getElementById("win").style.display = "block";
+        document.getElementById("winPower").textContent = "Power: " + document.getElementById("power").textContent;
+    }
+    winTime += dt;
+    if (winTime > 11) {
+        scene = "menu";
+        document.getElementById("win").style.display = "none";
+    }
+    winOpacity += dt/4;
+    document.getElementById("win").style.opacity = winOpacity;
+}
 document.getElementById("antiPirate").addEventListener("change", (e) => {
     if (document.getElementById("antiPirate").files.length === 1) {
         if (document.getElementById("antiPirate").files[0].name == "SisterLocation.exe") {
@@ -1046,6 +1076,8 @@ function update(time) {
         if (pirate) {
             scene = "menu";
         }
+    } else if (scene == "win") {
+        win(dt,time);
     }
     requestAnimationFrame(update);
 }

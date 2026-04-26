@@ -359,3 +359,39 @@ body {
     border-radius: 4vh;
     transform: translate(-50%,-50%);
 }
+#ingameTimer {
+    position: fixed;
+    right: 6vh;
+    top: 6vh;
+}
+#ingameTimer2 {
+    position: fixed;
+    right: 6vh;
+    top: 12vh;
+    direction: rtl;
+    font-size: 4vh;
+}
+#win {
+    display: none;
+    opacity: 0;
+}
+#winBG {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+}
+#winText {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    gap: 5vh;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    color: white;
+    font-size: 10vh;
+    text-align: center;
+}

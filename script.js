@@ -1,9 +1,11 @@
 let scene = "pirate";
-const characters = [
+let characters = [
     {
         name: "baby",
-        moveTime: [0,15],
-        killTime: [0,15],
+        moveTimer: 0,
+        moveTime: 15,
+        killTimer: 0,
+        killTime: 15,
         rng: 0.5,
         cam: 0,
         menuImg: "assets/characterSelect/baby.png",
@@ -13,8 +15,10 @@ const characters = [
     },
     {
         name: "funtime freddy",
-        moveTime: [0,15],
-        killTime: [0,3.5],
+        moveTimer: 0,
+        moveTime: 15,
+        killTimer: 0,
+        killTime: 3.5,
         side: "left",
         rng: 0.5,
         cam: 0,
@@ -28,8 +32,10 @@ const characters = [
     },
     {
         name: "ballora",
-        moveTime: [0,15],
-        killTime: [0,3],
+        moveTimer: 0,
+        moveTime: 15,
+        killTimer: 0,
+        killTime: 3,
         rng: 0.5,
         side: 0,
         menuImg: "assets/characterSelect/ballora.png",
@@ -39,9 +45,12 @@ const characters = [
     },
     {
         name: "funtime foxy",
-        moveTime: [0,6],
-        killTime: [0,10],
-        leaveTime: [0,1],
+        moveTimer: 0,
+        moveTime: 6,
+        killTimer: 0,
+        killTime: 10,
+        leaveTimer: 0,
+        leaveTime: 1,
         rng: 0.5,
         phase: 0,
         menuImg: "assets/characterSelect/funtimeFoxy.png",
@@ -52,7 +61,8 @@ const characters = [
     {
         name: "bonnet",
         rng: 0.5,
-        moveTime: [0,15],
+        moveTimer: 0,
+        moveTime: 15,
         x: 110,
         menuImg: "assets/characterSelect/bonnet.png",
         difficulty: 0,
@@ -62,9 +72,12 @@ const characters = [
     {
         name: "ennard",
         rng: 0.5,
-        moveTime: [0,8], // pp 5mt
-        killTime: [0,4],
-        leaveTime: [0,0.7],
+        moveTimer: 0,
+        moveTime: 8, // pp 5mt
+        killTimer: 0,
+        killTime: 4,
+        leaveTimer: 0,
+        leaveTime: 0.7,
         side: 0,
         phase: 0,
         menuImg: "assets/characterSelect/ennard.png",
@@ -75,9 +88,12 @@ const characters = [
     {
         name: "bidybab",
         rng: 0.5,
-        moveTime: [0,8], // pp 5mt
-        killTime: [0,3],
-        leaveTime: [0,0.7],
+        moveTimer: 0,
+        moveTime: 8, // pp 5mt
+        killTimer: 0,
+        killTime: 3,
+        leaveTimer: 0,
+        leaveTime: 0.7,
         phase: 0,
         menuImg: "assets/characterSelect/bidybab.png",
         difficulty: 0,
@@ -87,10 +103,11 @@ const characters = [
     {
         name: "electrobab",
         rng: 0.5,
-        moveTime: [0,15],
+        moveTimer: 0,
+        moveTime: 15,
         menuImg: "assets/characterSelect/electrobab.png",
         difficulty: 0,
-        side: 0,
+        side: 3,
         element: null,
         description: "shock the cam he is in its either cam03 or cam04",
     },
@@ -99,7 +116,8 @@ const characters = [
         rng: 0.5,
         killTime: 0,
         side: 0,
-        leaveTime: [0, 0.5],
+        leaveTimer: 0,
+        leaveTime: 0.5,
         camsOpened: false,
         active: false,
         menuImg: "assets/characterSelect/yenndo.png",
@@ -110,8 +128,10 @@ const characters = [
     {
         name: "lolbit",
         rng: 0.5,
-        moveTime: [0,30], // pp mt 15
-        killTime: [0,5],
+        moveTimer: 0,
+        moveTime: 30,
+        killTimer: 0,
+        killTime: 5,
         side: 0,
         camsOpened: false,
         sequence: 0,
@@ -125,7 +145,8 @@ const characters = [
     {
         name: "minireena 2",
         rng: 0.5,
-        moveTime: [0,15],
+        moveTimer: 0,
+        moveTime: 15,
         minireenas: [],
         menuImg: "assets/characterSelect/minireena.png",
         difficulty: 0,
@@ -135,14 +156,16 @@ const characters = [
     {
         name: "minireena 1",
         rng: 0.5,
-        moveTime: [0,8],
-        killTime: [0,5],
+        moveTimer: 0,
+        moveTime: 8,
+        killTimer: 0,
+        killTime: 5,
+        leaveTimer: 0,
+        leaveTime: 0.5,
         side: 0,
         camsOpened: false,
         sequence: 0,
         index: 0,
-        leaveTime: [0, 0.5],
-        camsOpened: false,
         active: false,
         menuImg: "assets/characterSelect/minireena2.png",
         difficulty: 0,
@@ -359,6 +382,15 @@ let power = 100;
 let oxygen = 100;
 let ingameTimer = 0;
 let powerDrain = 0;
+const textDisplay = [
+    "12 AM",
+    "1 AM",
+    "2 AM",
+    "3 AM",
+    "4 AM",
+    "5 AM",
+    "6 AM",
+];
 document.getElementById("bonnetHitbox").addEventListener("mousedown", (e) => {
     for (let i = 0; i<activeCharacters.length; i++) {
         if (activeCharacters[i].name == "bonnet") {
@@ -376,6 +408,12 @@ function ingame(dt, time) {
         document.getElementById("menu").style.display = "none";
         document.getElementById("ingame").style.display = "block";
         document.getElementById("deathScreen").style.display = "none";
+
+        document.getElementById("leftDoor").style.display = "none";
+        document.getElementById("rightDoor").style.display = "none";
+        document.getElementById("vent").style.display = "none";
+        document.getElementById("mask").style.display = "none";
+        document.getElementById("cams").style.display = "none";
         cams = {
             opened: false,
             cam: 0,
@@ -392,9 +430,16 @@ function ingame(dt, time) {
             if (characters[i].element != null)
                 characters[i].element.style.display = "none";
             if (characters[i].difficulty != 0) {
-                activeCharacters.push({...characters[i]});
+                activeCharacters.push({ ...characters[i] });
             }
         }
+        for (let i = 0; i<activeCharacters.length; i++) {
+            let ac = activeCharacters[i];
+            if (ac.name == "minireena 2") {
+                ac.minireenas = [];
+            }
+        }
+        console.log(activeCharacters, characters);
     }
     ingameTimer += dt;
     document.getElementById("officeBG").style.backgroundPosition = mouse.x / window.innerWidth * 100 + "%" + mouse.y / window.innerWidth * 100 + "%";
@@ -420,32 +465,32 @@ function ingame(dt, time) {
     for (let i = 0; i<activeCharacters.length; i++) {
         let ac = activeCharacters[i];
         if (ac.name == "baby") {
-            if (ac.moveTime[0] === 0) {
+            if (ac.moveTimer === 0) {
                 ac.rng = Math.random() + 0.5;
             }
-            ac.moveTime[0] += dt * (ac.difficulty / 10+1);
-            if (ac.moveTime[0] >= ac.moveTime[1]) {
-                if (ac.killTime[0] === 0) {
+            ac.moveTimer += dt * (ac.difficulty / 10+1);
+            if (ac.moveTimer >= ac.moveTime) {
+                if (ac.killTimer === 0) {
                     sfx.babySound.play();
                     ac.cam = Math.round(Math.random() * 2);
                     if (ac.cam == 2) {
                         ac.cam = 4;
                     }
                 }
-                ac.killTime[0] += dt * (ac.difficulty / 10+1);
+                ac.killTimer += dt * (ac.difficulty / 10+1);
                 if (cams.opened) {
                     if (cams.cam == ac.cam) {
                         ac.element.style.display = "block";
                         if (shocking) {
-                            ac.moveTime[0] = 0;
-                            ac.killTime[0] = 0;
+                            ac.moveTimer = 0;
+                            ac.killTimer = 0;
                             ac.element.style.display = "none";
                         }
                     } else {
                         ac.element.style.display = "none";
                     }
                 }
-                if (ac.killTime[0] >= ac.killTime[1]) {
+                if (ac.killTimer >= ac.killTimer) {
                     die("baby");
                 }
             }
@@ -454,7 +499,7 @@ function ingame(dt, time) {
                 sfx.ffIntro.play();
                 ac.firstFrame = true;
             }
-            if (ac.moveTime[0] === 0) {
+            if (ac.moveTimer === 0) {
                 ac.rng = Math.random() + 0.5;
             }
             if (ac.side == "left") {
@@ -467,7 +512,7 @@ function ingame(dt, time) {
                 }
             }
             if (ac.attacking) {
-                if (ac.killTime[0] === 0) {
+                if (ac.killTimer === 0) {
                     if (Math.random() > 0.5) {
                         sfx.ffAttack1.pause();
                         sfx.ffAttack1.currentTime = 0;
@@ -480,8 +525,8 @@ function ingame(dt, time) {
                         ac.attack = 1;
                     }
                 }
-                ac.killTime[0] += dt;
-                if (ac.killTime[0] >= ac.killTime[1]) {
+                ac.killTimer += dt;
+                if (ac.killTimer >= ac.killTime) {
                     if (ac.side == "left") {
                         if (ac.attack == 0) {
                             if (doors[0]) {
@@ -530,8 +575,8 @@ function ingame(dt, time) {
                     }
                 }
             } else {
-                ac.moveTime[0] += dt * (ac.difficulty / 10+1);
-                if (ac.moveTime[0] >= ac.moveTime[1]) {
+                ac.moveTimer += dt * (ac.difficulty / 10+1);
+                if (ac.moveTimer >= ac.moveTime) {
                     if (Math.random() > 0.5) {
                         if (ac.side == "right") {
                             ac.side = "left";
@@ -544,30 +589,30 @@ function ingame(dt, time) {
                             sfx.ffLTR.currentTime = 0;
                             sfx.ffLTR.play();
                         }
-                        ac.moveTime[0] = 0;
+                        ac.moveTimer = 0;
                     } else {
                         ac.attacking = true;
                     }
                 }
             }
         } else if (ac.name == "ballora") {
-            if (ac.moveTime[0] === 0) {
+            if (ac.moveTimer === 0) {
                 ac.rng = Math.random() + 0.5;
             }
-            ac.moveTime[0] += dt * (ac.difficulty / 10+1) * ac.rng;
-            if (ac.moveTime[0] >= ac.moveTime[1]) {
-                if (ac.killTime[0] === 0) {
+            ac.moveTimer += dt * (ac.difficulty / 10+1) * ac.rng;
+            if (ac.moveTimer >= ac.moveTime) {
+                if (ac.killTimer === 0) {
                     ac.side = Math.round(Math.random());
                     const sound = [sfx.balloraLeft, sfx.balloraRight];
                     sound[ac.side].currentTime = 0;
                     sound[ac.side].pause();
                     sound[ac.side].play();
                 }
-                ac.killTime[0] += dt * (ac.difficulty / 10+1);
-                if (ac.killTime[0] >= ac.killTime[1]) {
+                ac.killTimer += dt * (ac.difficulty / 10+1);
+                if (ac.killTimer >= ac.killTime) {
                     if (doors[ac.side*2]) {
-                        ac.killTime[0] = 0;
-                        ac.moveTime[0] = 0;
+                        ac.killTimer = 0;
+                        ac.moveTimer = 0;
                         sfx.balloraLeft.currentTime = 0;
                         sfx.balloraLeft.pause();
                         sfx.balloraRight.currentTime = 0;
@@ -581,41 +626,41 @@ function ingame(dt, time) {
                 }
             }
         } else if (ac.name == "funtime foxy") {
-            if (ac.moveTime[0] === 0) {
+            if (ac.moveTimer === 0) {
                 ac.rng = Math.random() + 0.5;
             }
-            ac.moveTime[0] += dt * (ac.difficulty / 10+1) * ac.rng;
+            ac.moveTimer += dt * (ac.difficulty / 10+1) * ac.rng;
             if (cams.cam == 6) {
                 document.getElementById("camsBG").style.backgroundImage = "url(assets/funtimeFoxy/" + (ac.phase+1) + ".png)";
             }
-            if (ac.moveTime[0] >= ac.moveTime[1]) {
-                ac.moveTime[0] = 0;
+            if (ac.moveTimer >= ac.moveTime) {
+                ac.moveTimer = 0;
                 if (ac.phase != 4) {
                     ac.phase++;
                 }
             }
             if (ac.phase == 4) {
                 if (doors[2]) {
-                    ac.leaveTime[0] += dt;
-                    if (ac.leaveTime[0] >= ac.leaveTime[1]) {
-                        ac.leaveTime[0] = 0;
-                        ac.killTime[0] = 0;
-                        ac.moveTime[0] = 0;
+                    ac.leaveTimer += dt;
+                    if (ac.leaveTimer >= ac.leaveTime) {
+                        ac.leaveTimer = 0;
+                        ac.killTimer = 0;
+                        ac.moveTimer = 0;
                         ac.phase = 0;
                         sfx.bonk.pause();
                         sfx.bonk.currentTime = 0;
                         sfx.bonk.play();
                     }
                 } else {
-                    ac.killTime[0] += dt * (ac.difficulty / 10+1);
-                    if (ac.killTime[0] >= ac.killTime[1]) {
+                    ac.killTimer += dt * (ac.difficulty / 10+1);
+                    if (ac.killTimer >= ac.killTime) {
                         die("funtime foxy");
                     }
                 }
             }
         } else if (ac.name == "bonnet") {
-            ac.moveTime[0] += dt * (ac.difficulty / 10+1);
-            if (ac.moveTime[0] >= ac.moveTime[1]) {
+            ac.moveTimer += dt * (ac.difficulty / 10+1);
+            if (ac.moveTimer >= ac.moveTime) {
                 ac.element.style.left = ac.x + "vw";
                 ac.element.style.display = "block";
                 ac.x -= dt * (ac.difficulty / 10+1) * 12;
@@ -627,16 +672,16 @@ function ingame(dt, time) {
                 ac.element.style.display = "none";
             }
         } else if (ac.name == "ennard") {
-            if (ac.moveTime[0] == 0) {
+            if (ac.moveTimer == 0) {
                 ac.rng = Math.random() + 0.5;
                 ac.side = Math.round(Math.random()*2);
             }
-            ac.moveTime[0] += dt * (ac.difficulty / 10+1) * ac.rng;
+            ac.moveTimer += dt * (ac.difficulty / 10+1) * ac.rng;
             const sides = ["left", "top", "right"];
-            if (ac.moveTime[0] >= ac.moveTime[1]) {
+            if (ac.moveTimer >= ac.moveTime) {
                 if (ac.phase != 2) {
                     ac.phase++;
-                    ac.moveTime[0] = 0.1;
+                    ac.moveTimer = 0.1;
                     if (ac.phase == 2) {
                         sfx.ennardSound.play();
                         shakeIntensity = 3;
@@ -657,11 +702,11 @@ function ingame(dt, time) {
             }
             if (ac.phase == 2) {
                 if (doors[ac.side]) {
-                    ac.leaveTime[0] += dt;
-                    if (ac.leaveTime[0] >= ac.leaveTime[1]) {
-                        ac.leaveTime[0] = 0;
-                        ac.moveTime[0] = 0;
-                        ac.killTime[0] = 0;
+                    ac.leaveTimer += dt;
+                    if (ac.leaveTimer >= ac.leaveTime) {
+                        ac.leaveTimer = 0;
+                        ac.moveTimer = 0;
+                        ac.killTimer = 0;
                         ac.phase = 0;
                         sfx.bonk.pause();
                         sfx.bonk.currentTime = 0;
@@ -670,29 +715,33 @@ function ingame(dt, time) {
                         sfx.ennardSound.currentTime = 0;
                     }
                 } else {
-                    ac.killTime[0] += dt;
-                    if (ac.killTime[0] >= ac.killTime[1]) {
+                    ac.killTimer += dt;
+                    if (ac.killTimer >= ac.killTime) {
                         die("ennard");
                     }
                 }
             }
         } else if (ac.name == "bidybab") {
-            if (ac.moveTime[0] == 0.1) {
+            if (ac.moveTimer == 0.1) {
                 ac.rng = Math.random() + 0.5;
             }
             if (!doors[1]) {
-                ac.moveTime[0] += dt * (ac.difficulty / 10+1);
+                ac.moveTimer += dt * (ac.difficulty / 10+1);
             }
-            if (ac.moveTime[0] >= ac.moveTime[1]) {
+            if (ac.moveTimer >= ac.moveTime) {
                 ac.phase++;
-                ac.moveTime[0] = 0.1;
+                ac.moveTimer = 0.1;
                 if (ac.phase == 1) {sfx.bidybab1.pause(); sfx.bidybab1.currentTime = 0; sfx.bidybab1.play();}
                 if (ac.phase == 2) {sfx.bidybab2.pause(); sfx.bidybab2.currentTime = 0; sfx.bidybab2.play();}
                 if (ac.phase == 3) {sfx.bidybabBang.pause(); sfx.bidybabBang.currentTime = 0; sfx.bidybabBang.play(); shakeIntensity = 3;}
                 if (ac.phase == 4) {die("bidybab")}
             }
             if (ac.phase != 0 && cams.cam == 4)
-                document.getElementById("camsBG").style.backgroundImage = "url(assets/bidybab/" + ac.phase + ".png)";
+                if (ac.phase >= 4) {
+                    document.getElementById("camsBG").style.backgroundImage = "url(assets/bidybab/3.png)";
+                } else {
+                    document.getElementById("camsBG").style.backgroundImage = "url(assets/bidybab/" + ac.phase + ".png)";
+                }
             if (cams.cam == 4 && shocking) {
                 ac.phase--;
                 if (ac.phase == -1) {
@@ -700,18 +749,17 @@ function ingame(dt, time) {
                 }
             }
         } else if (ac.name == "electrobab") {
-            if (ac.moveTime[0] === 0) {
+            if (ac.moveTimer === 0) {
                 ac.side = Math.round(Math.random()+2);
             }
-            ac.moveTime[0] += dt * (ac.difficulty / 10+1);
-            if (ac.moveTime[0] >= ac.moveTime[1]) {
+            ac.moveTimer += dt * (ac.difficulty / 10+1);
+            if (ac.moveTimer >= ac.moveTime) {
                 powerDrain += 0.5;
-                console.log(ac.side);
                 document.getElementById("cam" + (ac.side+1)).style.animationName = "camAnim";
                 if (cams.opened && cams.cam == ac.side) {
                     document.getElementById("camsBG").style.backgroundImage = "url(assets/electrobab/" + ac.side + ".png)";
                     if (shocking) {
-                        ac.moveTime[0] = 0;
+                        ac.moveTimer = 0;
                     }
                 }
             }
@@ -742,12 +790,12 @@ function ingame(dt, time) {
                 ac.element.style.display = "none";
             }
         } else if (ac.name == "lolbit") {
-            if (ac.moveTime[0] === 0) {
+            if (ac.moveTimer === 0) {
                 ac.sequence = Math.round(Math.random() * 7+1);
                 ac.rng = Math.random() +0.5;
             }
-            ac.moveTime[0] += dt * (ac.difficulty / 10 +1) * ac.rng;
-            if (ac.moveTime[0] >= ac.moveTime[1]) {
+            ac.moveTimer += dt * (ac.difficulty / 10 +1) * ac.rng;
+            if (ac.moveTimer >= ac.moveTime) {
                 ac.element.style.display = "block";
                 ac.textElement.textContent = ac.sequence;
                 if (keys["0"]) {power--;}
@@ -764,14 +812,14 @@ function ingame(dt, time) {
                     power++;
                     ac.sequence = Math.round(Math.random() * 7+1);
                     if (ac.index >= 3) {
-                        ac.moveTime[0] = 0;
+                        ac.moveTimer = 0;
                         ac.index = 0;
-                        ac.killTime[0] = 0;
+                        ac.killTimer = 0;
                     }
                 }
                 sfx.lolbit.play();
-                ac.killTime[0] += dt * ac.killTime[0]+dt/8; // pp /2
-                powerDrain += ac.killTime[0];
+                ac.killTimer += dt * ac.killTimer+dt/8; // pp /2
+                powerDrain += ac.killTimer;
             } else {
                 ac.element.style.display = "none";
             }
@@ -792,9 +840,9 @@ function ingame(dt, time) {
             if (ac.active) {
                 ac.element.style.display = "block";
                 if (mask) {
-                    ac.leaveTime[0] += dt;
-                    if (ac.leaveTime[0] >= ac.leaveTime[1]) {
-                        ac.leaveTime[0] = 0;
+                    ac.leaveTimer += dt;
+                    if (ac.leaveTimer >= ac.leaveTime) {
+                        ac.leaveTimer = 0;
                         ac.active = false;
                         ac.camsOpened = false;
                     }
@@ -803,12 +851,12 @@ function ingame(dt, time) {
                 ac.element.style.display = "none";
             }
         } else if (ac.name == "minireena 2") {
-            if (ac.moveTime[0] === 0) {
+            if (ac.moveTimer === 0) {
                 ac.rng = Math.random() + 0.5;
             }
-            ac.moveTime[0] += dt * (ac.difficulty / 10 +1) * ac.rng;
-            if (ac.moveTime[0] >= ac.moveTime[1]) {
-                ac.moveTime[0] = 0;
+            ac.moveTimer += dt * (ac.difficulty / 10 +1) * ac.rng;
+            if (ac.moveTimer >= ac.moveTime) {
+                ac.moveTimer = 0;
                 ac.minireenas.push([Math.round(Math.random()*6),0]);
             }
             ac.element.style.display = "none";
@@ -855,11 +903,9 @@ function menu(dt, time) {
     }
     document.getElementById("menuBG").style.backgroundPositionX = -time / 100 + "vw";
 }
-function dead(dt, time) {
-
-}
 function die(killer) {
     scene = "dead";
+    resetFF();
     for (let key in sfx) {
         sfx[key].pause();
         sfx[key].currentTime = 0;
@@ -870,7 +916,6 @@ function die(killer) {
 }
 document.getElementById("antiPirate").addEventListener("change", (e) => {
     if (document.getElementById("antiPirate").files.length === 1) {
-        console.log("file selected:", document.getElementById("antiPirate").files[0]);
         if (document.getElementById("antiPirate").files[0].name == "SisterLocation.exe") {
             scene = "menu";
             pirate = true;
@@ -907,8 +952,6 @@ function update(time) {
         if (pirate) {
             scene = "menu";
         }
-    } else if (scene == "dead") {
-        dead(dt,time);
     }
     requestAnimationFrame(update);
 }

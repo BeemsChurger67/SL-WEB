@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>SL:WEB</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="style.css">
+        <link rel="shortcut icon" href="assets/favicon.png" type="image/x-icon">
+    </head>
+    <body>
+        <div id="pirate">
+            <div id="pirateText">Select SisterLocation.exe to play this</div>
+            <input type="file" id="antiPirate" accept=".exe">
+        </div>
+        <div id="menu">
+            <div id="menuBG"></div>
+            <div id="characters">
+
+            </div>
+            <div id="volumeDiv">Volume<input type="range" value="80" min="0" max="100" id="volumeRange"></div>
+            <button id="startButton">Start</button>
+        </div>
+        <div id="ingame">
+            <div id="officeBG"></div>
+            <div id="leftDoor"></div>
+            <div id="rightDoor"></div>
+            <div id="vent"></div>
+            <div id="yenndo"></div>
+            <div id="bonnet">
+                <div id="bonnetHitbox"></div>
+            </div>
+            <div id="cams">
+                <div id="camsBG"></div>
+                <div id="baby"></div>
+                <div id="camStatic"></div>
+                <div id="shock"></div>
+                <div id="camButtons">
+                    <button data-cam="0" id="cam1">CAM01</button>
+                    <button data-cam="1" id="cam2">CAM02</button>
+                    <button data-cam="2" id="cam3">CAM03</button>
+                    <button data-cam="3" id="cam4">CAM04</button>
+                    <button data-cam="4" id="cam5">CAM05</button>
+                    <button data-cam="5" id="cam6">CAM06</button>
+                    <button data-cam="6" id="cam7">CAM07</button>
+                </div>
+            </div>
+            <div id="lolbit">
+                <div id="lolbitSequence">0</div>
+                <div id="lolbitImage"></div>
+            </div>
+            <div id="textUI">
+                <div>Power <div id="power">100%</div></div>
+                <div>Oxygen <div id="oxygen">100%</div></div>
+            </div>
+        </div>
+        <div id="deathScreen">
+            <div id="killerText"></div>
+        </div>
+        <script src="script.js"></script>
+    </body>
+</html>

@@ -90,6 +90,7 @@ const characters = [
         moveTime: [0,15],
         menuImg: "assets/characterSelect/electrobab.png",
         difficulty: 0,
+        side: 0,
         element: null,
         description: "shock the cam he is in its either cam03 or cam04",
     },
@@ -701,6 +702,7 @@ function ingame(dt, time) {
             ac.moveTime[0] += dt * (ac.difficulty / 10+1);
             if (ac.moveTime[0] >= ac.moveTime[1]) {
                 powerDrain += 0.5;
+                console.log(ac.side);
                 document.getElementById("cam" + (ac.side+1)).style.animationName = "camAnim";
                 if (cams.opened && cams.cam == ac.side) {
                     document.getElementById("camsBG").style.backgroundImage = "url(assets/electrobab/" + ac.side + ".png)";

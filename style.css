@@ -208,6 +208,24 @@ body {
     background-size: 100% 100%;
     transform: translate(-50%,20%);
 }
+#minireena {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url(assets/ingameCharacters/minireena.png);
+    background-size: 100% 100%;
+}
+#minireena2 {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url(assets/ingameCharacters/minireena2.png);
+    background-size: 100% 100%;
+}
 #lolbitImage {
     position: absolute;
     top: 50%;
@@ -288,10 +306,41 @@ body {
     height: 100%;
     background-color: black;
 }
-#killerText {
+#deathText {
     position: absolute;
+    display: flex;
+    flex-direction: column;
+    gap: 5vh;
     left: 50%;
-    top: 50%;
-    font-size: 10vh;
+    top: 60%;
+    font-size: 7vh;
     color: red;
+    transform: translate(-50%,-50%);
+}
+#deathText button {
+    font-size: 5vh;
+    border: none;
+    border-radius: 2vh;
+    background-color: darkred;
+}
+#deathText button:hover {
+    scale: 1.1;
+}
+#deathText button:active {
+    scale: 0.9;
+}
+#charName {
+    font-size: 4vh;
+}
+#charDescription {
+    font-size: 2vh;
+}
+#characterDescription {
+    position: absolute;
+    display: none;
+    transform: translate(1vh, -50%);
+    width: 30vh;
+    height: 20vh;
+    background-color: rgba(0,0,0,0.5);
+    color: white;
 }

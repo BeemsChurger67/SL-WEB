@@ -9,6 +9,7 @@ const characters = [
         menuImg: "assets/characterSelect/baby.png",
         difficulty: 0,
         element: document.getElementById("baby"),
+        description: "she will say a voiceline and then find her in cams 1,2,5 and shock it",
     },
     {
         name: "funtime freddy",
@@ -23,6 +24,7 @@ const characters = [
         difficulty: 0,
         firstFrame: false,
         element: null,
+        description: "is either in the left or right if he says bon bon go get him close the corresponding door but if he says get ready for a surprise close the opposite door",
     },
     {
         name: "ballora",
@@ -33,6 +35,7 @@ const characters = [
         menuImg: "assets/characterSelect/ballora.png",
         difficulty: 0,
         element: null,
+        description: "you will hear music and you have to close the door where its panning",
     },
     {
         name: "funtime foxy",
@@ -44,6 +47,7 @@ const characters = [
         menuImg: "assets/characterSelect/funtimeFoxy.png",
         difficulty: 0,
         element: null,
+        description: "hes in cam 7 and once he leaves close the right door",
     },
     {
         name: "bonnet",
@@ -53,6 +57,7 @@ const characters = [
         menuImg: "assets/characterSelect/bonnet.png",
         difficulty: 0,
         element: document.getElementById("bonnet"),
+        description: "click nose",
     },
     {
         name: "ennard",
@@ -65,6 +70,7 @@ const characters = [
         menuImg: "assets/characterSelect/ennard.png",
         difficulty: 0,
         element: null,
+        description: "appears in either the left or right door or vent and you have to close them when you hear a loud bang",
     },
     {
         name: "bidybab",
@@ -76,6 +82,7 @@ const characters = [
         menuImg: "assets/characterSelect/bidybab.png",
         difficulty: 0,
         element: null,
+        description: "appears in the top vent shock him to make him go back before he kills you",
     },
     {
         name: "electrobab",
@@ -84,6 +91,7 @@ const characters = [
         menuImg: "assets/characterSelect/electrobab.png",
         difficulty: 0,
         element: null,
+        description: "shock the cam he is in its either cam03 or cam04",
     },
     {
         name: "yenndo",
@@ -96,6 +104,7 @@ const characters = [
         menuImg: "assets/characterSelect/yenndo.png",
         difficulty: 0,
         element: document.getElementById("yenndo"),
+        description: "he appears once you close cams if hes on the right close the right door if hes on the left close the left door if hes on the middle close the vent",
     },
     {
         name: "lolbit",
@@ -110,32 +119,34 @@ const characters = [
         difficulty: 0,
         element: document.getElementById("lolbit"),
         textElement: document.getElementById("lolbitSequence"),
-    },
-    {
-        name: "minireena 1",
-        rng: 0.5,
-        moveTime: [0,15],
-        killTime: [0,5],
-        side: 0,
-        camsOpened: false,
-        sequence: 0,
-        index: 0,
-        menuImg: "assets/characterSelect/minireena.png",
-        difficulty: 0,
-        element: null,
+        description: "press the number on the top of your screen or he will take your power"
     },
     {
         name: "minireena 2",
         rng: 0.5,
         moveTime: [0,15],
+        minireenas: [],
+        menuImg: "assets/characterSelect/minireena.png",
+        difficulty: 0,
+        element: document.getElementById("minireena2"),
+        description: "appears in the cams but will be highlighted hes taking your oxygen"
+    },
+    {
+        name: "minireena 1",
+        rng: 0.5,
+        moveTime: [0,8],
         killTime: [0,5],
         side: 0,
         camsOpened: false,
         sequence: 0,
         index: 0,
+        leaveTime: [0, 0.5],
+        camsOpened: false,
+        active: false,
         menuImg: "assets/characterSelect/minireena2.png",
         difficulty: 0,
-        element: null,
+        element: document.getElementById("minireena"),
+        description: "he has a 20% chance to appear when you close cams put the mask on"
     },
 ];
 let activeCharacters = [];
@@ -147,7 +158,7 @@ const sounds = {
     ffAttack1: "assets/soundEffects/funtimeFreddyAttack1.mp3",
     ffAttack2: "assets/soundEffects/funtimeFreddyAttack2.mp3",
     bonk: "assets/soundEffects/bonk.mp3",
-    shock: "assets/soundEffects/shock.mp3",
+    shock: "assets/soundEffects/shock.ogg",
     balloraLeft: "assets/soundEffects/balloraLeft.mp3",
     balloraRight: "assets/soundEffects/balloraRight.mp3",
     ennardSound: "assets/soundEffects/ennard.mp3",
@@ -163,6 +174,7 @@ for (let key in sounds) {
 }
 for (let i = 0; i<characters.length; i++) {
     const charDiv = document.createElement("div");
+    charDiv.id = "char_"+i;
     charDiv.classList.add("charDiv");
     charDiv.style.backgroundImage = "url(" + characters[i].menuImg + ")";
     document.getElementById("characters").appendChild(charDiv);
@@ -189,6 +201,22 @@ for (let i = 0; i<characters.length; i++) {
     charDiff.textContent = "0";
     charDiv.appendChild(charDiff);
 }
+document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState == "hidden") {
+        location.reload();
+    }
+});
+window.addEventListener("contextmenu", (e) => {e.preventDefault()});
+document.getElementById("deathText").addEventListener("click", (e) => {
+    if (e.target.id == "retry") {
+        scene = "ingame";
+        resetFF();
+    }
+    if (e.target.id == "btnMenu") {
+        scene = "menu";
+        resetFF();
+    }
+});
 document.getElementById("characters").addEventListener("mousedown", (e) => {
     if (e.target.id.includes("pd_")) {
         let char = e.target.dataset.char;
@@ -217,6 +245,15 @@ document.getElementById("characters").addEventListener("mousedown", (e) => {
         document.getElementById("cd_" + char).textContent = cd;
     }
 });
+document.getElementById("characters").addEventListener("mousemove", (e) => {
+    if (e.target.id == "characters") {return; document.getElementById("characterDescription").style.display = "none";};
+    document.getElementById("characterDescription").style.display = "block";
+    document.getElementById("charName").textContent = characters[e.target.id.match(/(\d+)/)[0]].name;
+    document.getElementById("charDescription").textContent = characters[e.target.id.match(/(\d+)/)[0]].description;
+});
+document.getElementById("characters").addEventListener("mouseleave", (e) => {
+    document.getElementById("characterDescription").style.display = "none";
+});
 let lastTime = 0;
 let firstFrame = [false,false,false,false];
 function resetFF() {
@@ -228,6 +265,8 @@ let mouse = {x: 0,y: 0};
 window.addEventListener("mousemove", (e) => {
     mouse.x = e.x;
     mouse.y = e.y;
+    document.getElementById("characterDescription").style.left = mouse.x / window.innerWidth * 100 + "vw";
+    document.getElementById("characterDescription").style.top = mouse.y / window.innerHeight * 100 + "vh";
 });
 let keys = {};
 let camStatic = 1;
@@ -335,6 +374,7 @@ function ingame(dt, time) {
         firstFrame[1] = true;
         document.getElementById("menu").style.display = "none";
         document.getElementById("ingame").style.display = "block";
+        document.getElementById("deathScreen").style.display = "none";
         cams = {
             opened: false,
             cam: 0,
@@ -343,6 +383,7 @@ function ingame(dt, time) {
         mask = false;
         ingameTimer = 0;
         power = 100;
+        activeCharacters = [];
         for (let i = 0; i<characters.length; i++) {
             if (characters[i].element != null)
                 characters[i].element.style.display = "none";
@@ -659,17 +700,7 @@ function ingame(dt, time) {
             }
             ac.moveTime[0] += dt * (ac.difficulty / 10+1);
             if (ac.moveTime[0] >= ac.moveTime[1]) {
-                powerDrain++;
-                for (let a = 0; a<activeCharacters.length; a++) {
-                    let ac2 = activeCharacters[a];
-                    if (ac2.name == "funtime freddy") {
-                        if (ac2.side == "left") {
-                            ac.side == 2;
-                        } else {
-                            ac.side == 3;
-                        }
-                    }
-                }
+                powerDrain += 0.5;
                 document.getElementById("cam" + (ac.side+1)).style.animationName = "camAnim";
                 if (cams.opened && cams.cam == ac.side) {
                     document.getElementById("camsBG").style.backgroundImage = "url(assets/electrobab/" + ac.side + ".png)";
@@ -738,7 +769,62 @@ function ingame(dt, time) {
             } else {
                 ac.element.style.display = "none";
             }
+        } else if (ac.name == "minireena 1") {
+            if (cams.opened) {
+                ac.camsOpened = true;
+                if (ac.active) {
+                    die("minireena");
+                }
+            } else {
+                if (ac.camsOpened) {
+                    if (Math.random() < 0.2) {
+                        ac.active = true;
+                    }
+                }
+                ac.camsOpened = false;
+            }
+            if (ac.active) {
+                ac.element.style.display = "block";
+                if (mask) {
+                    ac.leaveTime[0] += dt;
+                    if (ac.leaveTime[0] >= ac.leaveTime[1]) {
+                        ac.leaveTime[0] = 0;
+                        ac.active = false;
+                        ac.camsOpened = false;
+                    }
+                }
+            } else {
+                ac.element.style.display = "none";
+            }
+        } else if (ac.name == "minireena 2") {
+            if (ac.moveTime[0] === 0) {
+                ac.rng = Math.random() + 0.5;
+            }
+            ac.moveTime[0] += dt * (ac.difficulty / 10 +1) * ac.rng;
+            if (ac.moveTime[0] >= ac.moveTime[1]) {
+                ac.moveTime[0] = 0;
+                ac.minireenas.push([Math.round(Math.random()*6),0]);
+            }
+            ac.element.style.display = "none";
+            for (let a = 0; a<ac.minireenas.length; a++) {
+                ac.minireenas[a][1] += dt * ac.minireenas[a][1]+dt/40;
+                oxygen -= ac.minireenas[a][1];
+                document.getElementById("cam" + (ac.minireenas[a][0]+1)).style.animationName = "camAnim";
+                if (cams.cam == ac.minireenas[a][0]) {
+                    ac.element.style.display = "block";
+                    if (shocking) {
+                        ac.minireenas.splice(a, 1);
+                    }
+                }
+            }
         }
+    }
+    oxygen += dt * 10;
+    if (oxygen >= 100) {
+        oxygen = 100;
+    }
+    if (oxygen <= 0) {
+        die("oxygen");
     }
     camStatic -= dt * 4;
     shockTransition -= dt * 3;
@@ -749,7 +835,7 @@ function ingame(dt, time) {
         keys[key] = false;
     }
     shocking = false;
-    power -= powerDrain * dt;
+    power -= powerDrain * dt / 2;
 }
 function menu(dt, time) {
     if (!firstFrame[0]) {
@@ -758,13 +844,23 @@ function menu(dt, time) {
         document.getElementById("menu").style.display = "block";
         document.getElementById("ingame").style.display = "none";
         document.getElementById("pirate").style.display = "none";
+        document.getElementById("deathScreen").style.display = "none";
         saveFile.pirate = true;
     }
     document.getElementById("menuBG").style.backgroundPositionX = -time / 100 + "vw";
 }
+function dead(dt, time) {
+
+}
 function die(killer) {
     scene = "dead";
+    for (let key in sfx) {
+        sfx[key].pause();
+        sfx[key].currentTime = 0;
+    }
     document.getElementById("killerText").textContent = "yuo deid to " + killer;
+    document.getElementById("ingame").style.display = "none";
+    document.getElementById("deathScreen").style.display = "block";
 }
 document.getElementById("antiPirate").addEventListener("change", (e) => {
     if (document.getElementById("antiPirate").files.length === 1) {
@@ -805,6 +901,8 @@ function update(time) {
         if (pirate) {
             scene = "menu";
         }
+    } else if (scene == "dead") {
+        dead(dt,time);
     }
     requestAnimationFrame(update);
 }

@@ -298,13 +298,17 @@ body {
     background-size: 100% 100%;
     pointer-events: none;
 }
-#deathBackground {
+#deathBackground, #blackTransition {
     position: absolute;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
     background-color: black;
+}
+#blackTransition {
+    opacity: 0;
+    pointer-events: none;
 }
 #deathText {
     position: absolute;
@@ -473,4 +477,14 @@ body {
     height: 60vh;
     background-image: url(assets/ingameCharacters/plushtrap.png);
     background-size: 100% 100%;
+}
+#bonnie {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 85vh;
+    height: 100vh;
+    background-image: url(assets/ingameCharacters/bonnie.png);
+    background-size: 100% 100%;
+    transform: translate(-50%,20%);
 }

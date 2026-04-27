@@ -199,7 +199,7 @@ let characters = [
         moveTimer: 0,
         moveTime: 45,
         killTimer: 0,
-        killTime: 4,
+        killTime: 5,
         menuImg: "assets/characterSelect/tripleT.png",
         difficulty: 0,
         element: null,
@@ -222,8 +222,8 @@ let characters = [
         name: "grillrat.exe",
         moveTimer: 0,
         moveTime: 60,
-        killTime: 0,
-        killTimer: 15,
+        killTimer: 0,
+        killTime: 15,
         cam: 0,
         menuImg: "assets/characterSelect/damon.png",
         difficulty: 0,
@@ -235,24 +235,26 @@ let characters = [
         menuImg: "assets/characterSelect/goofyGoober.png",
         difficulty: 0,
         element: null,
-        description: "",
+        description: "no idea yet",
     },
     {
-        name: "funtime chica",
-        x: 0,
-        y: 0,
-        menuImg: "assets/characterSelect/funtimeChica.png",
+        name: "4_YT",
+        menuImg: "assets/characterSelect/4_YT.png",
         difficulty: 0,
         element: null,
-        description: "Just distracts you.... yeah...",
+        description: "Night multiplier goes up",
     },
     {
         name: "bonnie",
-        x: 0,
-        y: 0,
+        moveTimer: 0,
+        moveTime: 43,
+        killTimer: 0,
+        killTime: 5,
+        leaveTimer: 0,
+        leaveTime: 1,
         menuImg: "assets/characterSelect/bonnie.png",
         difficulty: 0,
-        element: null,
+        element: document.getElementById("bonnie"),
         description: "",
     },
     {
@@ -293,6 +295,7 @@ let characters = [
     },
 ];
 let activeCharacters = [];
+let YTMultiplier = 1;
 const sounds = {
     babySound: "assets/soundEffects/babySound.mp3",
     ffIntro: "assets/soundEffects/funtimeFreddyIntro.mp3",
@@ -319,6 +322,9 @@ const sounds = {
     tripleTTheme: "assets/soundEffects/tripleTTheme.mp3",
     damonSound: "assets/soundEffects/damonSound.mp3",
     menuTheme: "assets/soundEffects/menuTheme.mp3",
+    cognitionTheme: "assets/soundEffects/cognitionTheme.mp3",
+    pbcTheme: "assets/soundEffects/pbcTheme.mp3",
+    buzzSound: "assets/soundEffects/buzzSound.mp3",
 }
 let sfx = {};
 for (let key in sounds) {
@@ -383,6 +389,7 @@ let difficultyModeNames = [
 ]
 let maxModesIndex = 0;
 let multiplier = 1;
+let nightMult = 1;
 function difficultyModeName() {
     if (maxModesIndex === maxModes.length-1) {
         if (ingameDifficulty == "normal mode") {
@@ -454,13 +461,16 @@ document.getElementById("difficulties").addEventListener("click", (e) => {
     document.getElementById(e.target.id).style.color = "lime";
     document.getElementById("menu").style.filter = "";
     if (ingameDifficulty == difficulties[2]) {
-        document.getElementById("menu").style.filter = "url(#VHMFilter)"
+        document.getElementById("menu").style.filter = "url(#VHMFilter)";
+        document.getElementById("ingame").style.filter = "url(#VHMFilter)";
     }
     if (ingameDifficulty == difficulties[3]) {
-        document.getElementById("menu").style.filter = "url(#UHMFilter)"
+        document.getElementById("menu").style.filter = "url(#UHMFilter)";
+        document.getElementById("ingame").style.filter = "url(#UHMFilter)";
     }
     if (ingameDifficulty == difficulties[4]) {
-        document.getElementById("menu").style.filter = "url(#TPFilter)"
+        document.getElementById("menu").style.filter = "grayscale(1) contrast(1.5)";
+        document.getElementById("ingame").style.filter = "grayscale(1) contrast(1.5)";
     }
     difficultyModeName();
 }); 
@@ -588,49 +598,58 @@ let shockTransition = 0;
 window.addEventListener("keydown", (e) => {
     keys[e.key.toLowerCase()] = true;
     if (scene == "ingame") {
-        if (e.key.toLowerCase() == "a") {
-            doors[0] = !doors[0];
-            sfx.doorClose.pause();
-            sfx.doorClose.currentTime = 0;
-            sfx.doorClose.play();
-            if (doors[0]) {
-                document.getElementById("leftDoor").style.display = "block";
-            } else {
-                document.getElementById("leftDoor").style.display = "none";
+        if (power >= 0) {
+            if (e.key.toLowerCase() == "a") {
+                doors[0] = !doors[0];
+                sfx.doorClose.pause();
+                sfx.doorClose.currentTime = 0;
+                sfx.doorClose.play();
+                if (doors[0]) {
+                    document.getElementById("leftDoor").style.display = "block";
+                } else {
+                    document.getElementById("leftDoor").style.display = "none";
+                }
             }
-        }
-        if (e.key.toLowerCase() == "w") {
-            doors[1] = !doors[1];
-            sfx.doorClose.pause();
-            sfx.doorClose.currentTime = 0;
-            sfx.doorClose.play();
-            if (doors[1]) {
-                document.getElementById("vent").style.display = "block";
-            } else {
-                document.getElementById("vent").style.display = "none";
+            if (e.key.toLowerCase() == "w") {
+                doors[1] = !doors[1];
+                sfx.doorClose.pause();
+                sfx.doorClose.currentTime = 0;
+                sfx.doorClose.play();
+                if (doors[1]) {
+                    document.getElementById("vent").style.display = "block";
+                } else {
+                    document.getElementById("vent").style.display = "none";
+                }
             }
-        }
-        if (e.key.toLowerCase() == "d") {
-            doors[2] = !doors[2];
-            sfx.doorClose.pause();
-            sfx.doorClose.currentTime = 0;
-            sfx.doorClose.play();
-            if (doors[2]) {
-                document.getElementById("rightDoor").style.display = "block";
-            } else {
-                document.getElementById("rightDoor").style.display = "none";
+            if (e.key.toLowerCase() == "d") {
+                doors[2] = !doors[2];
+                sfx.doorClose.pause();
+                sfx.doorClose.currentTime = 0;
+                sfx.doorClose.play();
+                if (doors[2]) {
+                    document.getElementById("rightDoor").style.display = "block";
+                } else {
+                    document.getElementById("rightDoor").style.display = "none";
+                }
             }
-        }
-        if (e.key.toLowerCase() == "s") {
-            cams.opened = !cams.opened;
-            if (mask) {
-                cams.opened = false;
+            if (e.key.toLowerCase() == "s") {
+                cams.opened = !cams.opened;
+                if (mask) {
+                    cams.opened = false;
+                }
+                camStatic = 1;
+                if (cams.opened) {
+                    document.getElementById("cams").style.display = "block";
+                } else {
+                    document.getElementById("cams").style.display = "none";
+                }
             }
-            camStatic = 1;
-            if (cams.opened) {
-                document.getElementById("cams").style.display = "block";
-            } else {
-                document.getElementById("cams").style.display = "none";
+            if (e.key.toLowerCase() == "e" && cams.opened) {
+                shocking = true;
+                shockTransition = 0.6;
+                sfx.shock.pause();
+                sfx.shock.currentTime = 0;;
+                sfx.shock.play();
             }
         }
         if (e.key.toLowerCase() == " ") {
@@ -645,13 +664,6 @@ window.addEventListener("keydown", (e) => {
             } else {
                 document.getElementById("mask").style.display = "none";
             }
-        }
-        if (e.key.toLowerCase() == "e" && cams.opened) {
-            shocking = true;
-            shockTransition = 0.6;
-            sfx.shock.pause();
-            sfx.shock.currentTime = 0;;
-            sfx.shock.play();
         }
     }
 });
@@ -703,6 +715,7 @@ function ingame(dt, time) {
     if (!firstFrame[1]) {
         resetFF();
         firstFrame[1] = true;
+        nightMult = 1;
         document.getElementById("menu").style.display = "none";
         document.getElementById("ingame").style.display = "block";
         document.getElementById("deathScreen").style.display = "none";
@@ -743,7 +756,13 @@ function ingame(dt, time) {
             sfx[key].currentTime = 0;
         }
     }
-    sfx.ambience.play();
+    if (ingameDifficulty == "truest of true perfect mode") {
+        sfx.pbcTheme.play();
+    } else if (ingameDifficulty == "ultra hard mode") {
+        sfx.cognitionTheme.play();
+    } else {
+        sfx.ambience.play();
+    }
     ingameTimer += dt;
     let seconds = ingameTimer % 60;
     document.getElementById("ingameTimer").textContent = textDisplay[Math.floor(ingameTimer/60)];
@@ -771,13 +790,17 @@ function ingame(dt, time) {
     for (let i = 0; i<7; i++) {
         document.getElementById("cam" + (i+1)).style.animationName = "";
     }
+    let missShock = false;
+    if (shocking) {
+        missShock = true;
+    }
     for (let i = 0; i<activeCharacters.length; i++) {
         let ac = activeCharacters[i];
         if (ac.name == "baby") {
             if (ac.moveTimer === 0) {
                 ac.rng = Math.random() + 0.5;
             }
-            ac.moveTimer += dt * (ac.difficulty / 10+1) * ac.rng;
+            ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng;
             if (ac.moveTimer >= ac.moveTime) {
                 if (ac.killTimer === 0) {
                     sfx.babySound.play();
@@ -786,11 +809,12 @@ function ingame(dt, time) {
                         ac.cam = 4;
                     }
                 }
-                ac.killTimer += dt * (ac.difficulty / 10+1);
+                ac.killTimer += dt * (ac.difficulty / 18+1);
                 if (cams.opened) {
                     if (cams.cam == ac.cam) {
                         ac.element.style.display = "block";
                         if (shocking) {
+                            missShock = false;
                             ac.moveTimer = 0;
                             ac.killTimer = 0;
                             ac.element.style.display = "none";
@@ -884,7 +908,7 @@ function ingame(dt, time) {
                     }
                 }
             } else {
-                ac.moveTimer += dt * (ac.difficulty / 10+1);
+                ac.moveTimer += dt * (ac.difficulty / 18+1);
                 if (ac.moveTimer >= ac.moveTime) {
                     if (Math.random() > 0.5) {
                         if (ac.side == "right") {
@@ -908,7 +932,7 @@ function ingame(dt, time) {
             if (ac.moveTimer === 0) {
                 ac.rng = Math.random() + 0.5;
             }
-            ac.moveTimer += dt * (ac.difficulty / 10+1) * ac.rng;
+            ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult;
             if (ac.moveTimer >= ac.moveTime) {
                 if (ac.killTimer === 0) {
                     ac.side = Math.round(Math.random());
@@ -938,7 +962,7 @@ function ingame(dt, time) {
             if (ac.moveTimer === 0) {
                 ac.rng = Math.random() + 0.5;
             }
-            ac.moveTimer += dt * (ac.difficulty / 10+1) * ac.rng;
+            ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult;
             if (cams.cam == 6) {
                 document.getElementById("camsBG").style.backgroundImage = "url(assets/funtimeFoxy/" + (ac.phase+1) + ".png)";
             }
@@ -961,18 +985,18 @@ function ingame(dt, time) {
                         sfx.bonk.play();
                     }
                 } else {
-                    ac.killTimer += dt * (ac.difficulty / 10+1);
+                    ac.killTimer += dt;
                     if (ac.killTimer >= ac.killTime) {
                         die("funtime foxy");
                     }
                 }
             }
         } else if (ac.name == "bonnet") {
-            ac.moveTimer += dt * (ac.difficulty / 10+1);
+            ac.moveTimer += dt * (ac.difficulty / 18+1) * nightMult;
             if (ac.moveTimer >= ac.moveTime) {
                 ac.element.style.left = ac.x + "vw";
                 ac.element.style.display = "block";
-                ac.x -= dt * (ac.difficulty / 10+1) * 12;
+                ac.x -= dt * (ac.difficulty / 18+1) * 12;
                 sfx.bonnet.play();
                 if (ac.x <= 0) {
                     die("bonnet");
@@ -985,7 +1009,7 @@ function ingame(dt, time) {
                 ac.rng = Math.random() + 0.5;
                 ac.side = Math.round(Math.random()*2);
             }
-            ac.moveTimer += dt * (ac.difficulty / 10+1) * ac.rng;
+            ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult;
             const sides = ["left", "top", "right"];
             if (ac.moveTimer >= ac.moveTime) {
                 if (ac.phase != 2) {
@@ -1044,7 +1068,7 @@ function ingame(dt, time) {
                 }
             }
             if (!doors[1] && !ennardVent) {
-                ac.moveTimer += dt * (ac.difficulty / 10+1);
+                ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult;
             }
             if (ac.moveTimer >= ac.moveTime) {
                 ac.phase++;
@@ -1065,6 +1089,7 @@ function ingame(dt, time) {
             }
             if (cams.cam == 4 && shocking) {
                 ac.phase--;
+                missShock = false;
                 if (ac.phase == -1) {
                     ac.phase = 0;
                 }
@@ -1072,8 +1097,9 @@ function ingame(dt, time) {
         } else if (ac.name == "electrobab") {
             if (ac.moveTimer === 0) {
                 ac.side = Math.round(Math.random()+2);
+                ac.rng = Math.random() + 0.5;;
             }
-            ac.moveTimer += dt * (ac.difficulty / 10+1);
+            ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult;
             if (ac.moveTimer >= ac.moveTime) {
                 powerDrain += 0.5;
                 document.getElementById("cam" + (ac.side+1)).style.animationName = "camAnim";
@@ -1081,6 +1107,7 @@ function ingame(dt, time) {
                     document.getElementById("camsBG").style.backgroundImage = "url(assets/electrobab/" + ac.side + ".png)";
                     if (shocking) {
                         ac.moveTimer = 0;
+                        missShock = false;
                     }
                 }
             }
@@ -1115,7 +1142,7 @@ function ingame(dt, time) {
                 ac.sequence = Math.round(Math.random() * 3+1); // pp 7
                 ac.rng = Math.random() +0.5;
             }
-            ac.moveTimer += dt * (ac.difficulty / 10 +1) * ac.rng;
+            ac.moveTimer += dt * (ac.difficulty / 18 + 1) * ac.rng * nightMult;
             if (ac.moveTimer >= ac.moveTime) {
                 ac.element.style.display = "block";
                 ac.textElement.textContent = ac.sequence;
@@ -1175,7 +1202,7 @@ function ingame(dt, time) {
             if (ac.moveTimer === 0) {
                 ac.rng = Math.random() + 0.5;
             }
-            ac.moveTimer += dt * (ac.difficulty / 10 +1) * ac.rng;
+            ac.moveTimer += dt * (ac.difficulty / 18 +1) * ac.rng * nightMult;
             if (ac.moveTimer >= ac.moveTime) {
                 ac.moveTimer = 0;
                 ac.minireenas.push([Math.round(Math.random()*6),0]);
@@ -1189,6 +1216,7 @@ function ingame(dt, time) {
                     ac.element.style.display = "block";
                     if (shocking) {
                         ac.minireenas.splice(a, 1);
+                        missShock = false;
                     }
                 }
             }
@@ -1196,8 +1224,8 @@ function ingame(dt, time) {
             if (ac.moveTimer === 0) {
                 ac.rng = Math.random() + 0.5;
             }
-            ac.moveTimer += dt * (ac.difficulty / 10 +1) * ac.rng;
-            if (ac.moveTimer >= ac.moveTime-4*(ac.difficulty / 10 +1) && ac.moveTimer <= ac.moveTime-3*(ac.difficulty / 10 +1)) {
+            ac.moveTimer += dt * (ac.difficulty / 18 +1) * ac.rng * nightMult;
+            if (ac.moveTimer >= ac.moveTime-4*(ac.difficulty / 18 +1) * nightMult && ac.moveTimer <= ac.moveTime-3*(ac.difficulty / 18 +1) * nightMult) {
                 sfx.ntbVoiceLine.play();
             }
             if (ac.moveTimer >= ac.moveTime) {
@@ -1233,7 +1261,7 @@ function ingame(dt, time) {
             if (ac.moveTimer === 0) {
                 ac.rng = Math.random() + 0.5;
             }
-            ac.moveTimer += dt * (ac.difficulty/10+1) * ac.rng;
+            ac.moveTimer += dt * (ac.difficulty/18+1) * ac.rng * nightMult;
             if (ac.moveTimer >= ac.moveTime) {
                 sfx.tripleTTheme.play();
                 ac.killTimer += dt;
@@ -1245,7 +1273,7 @@ function ingame(dt, time) {
             if (ac.moveTimer === 0) {
                 ac.rng = Math.random() + 0.5;
             }
-            ac.moveTimer += dt * (ac.difficulty / 10 +1) * ac.rng;
+            ac.moveTimer += dt * (ac.difficulty / 18 +1) * ac.rng * nightMult * nightMult;
             ac.element.style.display = "none";
             if (ac.moveTimer >= ac.moveTime) {
                 if (cams.opened && cams.cam == 5) {
@@ -1269,19 +1297,55 @@ function ingame(dt, time) {
                 ac.cam = Math.round(Math.random() * 6);
                 ac.killTimer = 0;
             }
-            ac.moveTimer += dt * (ac.difficulty / 10 +1) * ac.rng;
+            ac.moveTimer += dt * (ac.difficulty / 18 +1) * ac.rng * nightMult;
             if (ac.moveTimer >= ac.moveTime) {
                 if (ac.killTimer === 0) {
                     sfx.damonSound.play();
                 }
                 ac.killTimer += dt;
+                if (ac.killTimer >= ac.killTime) {
+                    die("GRILLRAT.exe");
+                }
                 if (cams.opened && cams.cam == ac.cam) {
                     document.getElementById("camsBG").style.backgroundImage = "url(assets/characterSelect/damon.png)";
                     if (shocking) {
+                        missShock = false;
                         ac.moveTimer = 0;
                         ac.killTimer = 0;
                         sfx.damonSound.pause();
                         sfx.damonSound.currentTime = 0;
+                    }
+                }
+            }
+        } else if (ac.name == "GoofyGoober") {
+
+        } else if (ac.name == "4_YT") {
+            nightMult = (ingameTimer/(14400*2)*ac.difficulty)+1;
+        } else if (ac.name == "bonnie") {
+            if (ac.moveTimer === 0) {
+                ac.rng = Math.random() + 0.5;
+            }
+            ac.moveTimer += dt * (ac.difficulty / 18 +1) * ac.rng * nightMult;
+            ac.element.style.display = "none";
+            if (ac.moveTimer >= ac.moveTime) {
+                const bgRect = document.getElementById("officeBG");
+                ac.element.style.left = -(parseFloat(bgRect.style.backgroundPositionX)-100) / 2 * window.innerHeight / 726 + "%";
+                ac.element.style.top = -(parseFloat(bgRect.style.backgroundPositionY) +60) / 4 + 20 + "%";
+                ac.element.style.display = "block";
+                sfx.buzzSound.play();
+                if (mask) {
+                    ac.leaveTimer += dt;
+                    if (ac.leaveTimer >= ac.leaveTime) {
+                        ac.leaveTimer = 0;
+                        ac.killTimer = 0;
+                        ac.moveTimer = 0;
+                        sfx.buzzSound.pause();
+                        sfx.buzzSound.currentTime = 0;
+                    }
+                } else {
+                    ac.killTimer += dt;
+                    if (ac.killTimer >= ac.killTime) {
+                        die("bonnie");
                     }
                 }
             }
@@ -1296,6 +1360,7 @@ function ingame(dt, time) {
     }
     camStatic -= dt * 4;
     shockTransition -= dt * 3;
+    document.getElementById("nightMult").textContent = nightMult.toFixed(2) + "x";
     document.getElementById("shock").style.opacity = shockTransition;
     if (camStatic < 0.2) {camStatic = 0.2};
     document.getElementById("camStatic").style.opacity = camStatic;
@@ -1303,6 +1368,20 @@ function ingame(dt, time) {
         keys[key] = false;
     }
     shocking = false;
+    if (missShock) {
+        power -= 10;
+    }
+    if (power <= 0) {
+        doors[0] = false;
+        doors[1] = false;
+        doors[2] = false;
+        camsOpened = false;
+        document.getElementById("leftDoor").style.display = "none";
+        document.getElementById("rightDoor").style.display = "none";
+        document.getElementById("vent").style.display = "none";
+        document.getElementById("mask").style.display = "none";
+        document.getElementById("cams").style.display = "none";
+    }
     power -= powerDrain * dt / 2;
 }
 function menu(dt, time) {

@@ -1,4 +1,4 @@
-let scene = "pirate";
+let scene = "menu";
 let characters = [
     {
         name: "baby",
@@ -1515,8 +1515,8 @@ function ingame(dt, time) {
         document.getElementById("leftDoor").style.display = "none";
         document.getElementById("rightDoor").style.display = "none";
         document.getElementById("vent").style.display = "none";
-        document.getElementById("mask").style.display = "none";
         document.getElementById("cams").style.display = "none";
+        document.getElementById("officeBG").style.backgroundImage = "url(assets/powerOut.png)";
     }
     power -= powerDrain * dt / 2;
 }

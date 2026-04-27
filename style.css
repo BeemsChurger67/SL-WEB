@@ -56,7 +56,9 @@ body {
     filter: brightness(0.5);
 }
 #officeBG {
-    background-image: url(assets/officebg.png);
+    background-image: url(assets/office/0.png);
+    background-repeat: no-repeat;
+    image-rendering: auto;
 }
 #leftDoor {
     background-image: url(assets/leftDoor.png);
@@ -207,6 +209,46 @@ body {
     background-image: url(assets/ingameCharacters/yenndo.png);
     background-size: 100% 100%;
     transform: translate(-50%,20%);
+}
+#goldenFreddy {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 85vh;
+    height: 85vh;
+    background-image: url(assets/ingameCharacters/goldenFreddy.gif);
+    background-size: 100% 100%;
+    transform: translate(-50%,20%);
+}
+#irlCandy {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 40vh;
+    height: 60vh;
+    background-image: url(assets/characterSelect/irlCandy.png);
+    background-size: 100% 100%;
+    transform: translate(-50%,20%);
+}
+#pandimai {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 40vh;
+    height: 60vh;
+    background-image: url(assets/ingameCharacters/pandimai.gif);
+    background-size: 100% 100%;
+    transform: translate(-50%,20%);
+}
+#bamboo {
+    position: absolute;
+    display: none;
+    left: 50%;
+    top: 50%;
+    width: 20vh;
+    height: 20vh;
+    background-image: url(assets/ingameCharacters/bamboo.png);
+    transform: translate(-50%,-50%);
 }
 #minireena {
     position: absolute;
@@ -443,7 +485,7 @@ body {
     gap: 1vh;
     background-color: rgba(0,0,0,0.5);
     color: white;
-    font-size: 2vh;
+    font-size: 3vh;
 }
 #normalMode {
     color: lime;

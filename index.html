@@ -9,21 +9,54 @@
         <link rel="shortcut icon" href="assets/favicon.png" type="image/x-icon">
     </head>
     <body>
+        <svg>
+            <filter id="VHMFilter" color-interpolation-filters="linearRGB" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse">
+            <feColorMatrix type="matrix" values="1 0 0 0 0
+            0 0 0 0 0
+            0 0 0 0 0
+            0 0 0 1 0" x="0%" y="0%" width="100vw" height="100vh" in="SourceGraphic" result="colormatrix"/>
+            </filter>
+            <filter id="UHMFilter" color-interpolation-filters="linearRGB" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse">
+            <feColorMatrix type="matrix" values="0 0 0 0 0
+            0 0 0 0 0
+            1 1 0 0 0
+            0 0 0 1 0" x="0%" y="0%" width="100vw" height="100vh" in="SourceGraphic" result="colormatrix"/>
+            </filter>
+            <filter id="TPFilter" color-interpolation-filters="linearRGB" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse">
+            <feColorMatrix type="matrix" values="0.5 0.5 0.5 0 0
+            0 0 0 0 0
+            0 0 0 0 0
+            1 1 1 1 1" x="0%" y="0%" width="100vw" height="100vh" in="SourceGraphic" result="colormatrix"/>
+            </filter>
+        </svg>
         <div id="pirate">
             <div id="pirateText">Select SisterLocation.exe to play this</div>
             <input type="file" id="antiPirate" accept=".exe">
         </div>
         <div id="menu">
             <div id="menuBG"></div>
-            <div id="characters">
-
+            <div id="characters"></div>
+            <div id="menuMode">
+                <button id="leftMode">◀</button>
+                <div id="modeName">Custom Night</div>
+                <button id="rightMode">▶</button>
             </div>
             <div id="characterDescription">
                 <div id="charName"></div>
                 <div id="charDescription"></div>
             </div>
-            <div id="volumeDiv">Volume<input type="range" value="80" min="0" max="100" id="volumeRange"></div>
-            <button id="startButton">Start</button>
+            <div id="sideBar">
+                <div style="color: white; font-size: 5vh;">Difficulties</div>
+                <div id="difficulties">
+                    <div id="normalMode">Normal Mode</div>
+                    <div id="hardMode">Hard Mode</div>
+                    <div id="VHardMode">Very Hard Mode</div>
+                    <div id="UHardMode">Ultra Hard Mode</div>
+                    <div id="TOTPM">TRUEST OF TRUE PERFECT MODE</div>
+                </div>
+                <div id="volumeDiv">Volume<input type="range" value="80" min="0" max="100" id="volumeRange"></div>
+                <button id="startButton">Start</button>
+            </div>
         </div>
         <div id="ingame">
             <div id="officeBG"></div>
@@ -40,6 +73,7 @@
                 <div id="camsBG"></div>
                 <div id="baby"></div>
                 <div id="minireena2"></div>
+                <div id="plushtrap"></div>
                 <div id="camStatic"></div>
                 <div id="shock"></div>
                 <div id="camButtons">
@@ -51,6 +85,7 @@
                     <button data-cam="5" id="cam6">CAM06</button>
                     <button data-cam="6" id="cam7">CAM07</button>
                 </div>
+                <div id="tripleTLure">Tung Sahur Lure</div>
             </div>
             <div id="lolbit">
                 <div id="lolbitSequence">0</div>
@@ -67,6 +102,7 @@
         <div id="deathScreen">
             <div id="deathBackground"></div>
             <div id="deathText">
+                <div id="deathTime">0:00</div>
                 <div id="killerText"></div>
                 <button id="retry">Retry</button>
                 <button id="btnMenu">Menu</button>
@@ -77,6 +113,7 @@
             <div id="winText">
                 <div>6 AM</div>
                 <div id="winPower">Power: 100%</div>
+                <div id="winModeName"></div>
             </div>
         </div>
         <script src="script.js"></script>

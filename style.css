@@ -21,11 +21,12 @@ body {
 }
 #menu {
     display: none;
-    posiiton: absolute;
+    position: absolute;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
+    inset: 0;
 }
 
 #characters {
@@ -45,13 +46,10 @@ body {
     width: 100%;
     height: 100%;
     background-size: 100% 100%;
+    box-shadow: 0 0 1vh black;
 }
 #startButton {
-    position: absolute;
-    right: 10vh;
-    bottom: 10vh;
     font-size: 10vh;
-    padding: 0;
     border: solid black 1vh;
 }
 #startButton:hover {
@@ -172,9 +170,6 @@ body {
     display: none;
 }
 #volumeDiv {
-    position: absolute;
-    right: 10%;
-    bottom: 50%;
     text-shadow: 0 0 1vh black;
     color: white;
     font-size: 5vh;
@@ -315,6 +310,7 @@ body {
     position: absolute;
     display: flex;
     flex-direction: column;
+    text-align: center;
     gap: 5vh;
     left: 50%;
     top: 60%;
@@ -342,9 +338,10 @@ body {
 }
 #characterDescription {
     position: absolute;
+    display: none;
     transform: translate(1vh, -50%);
     width: 30vh;
-    height: 30vh;
+    height: 17vh;
     background-color: rgba(0,0,0,0.5);
     color: white;
 }
@@ -394,4 +391,86 @@ body {
     color: white;
     font-size: 10vh;
     text-align: center;
+}
+#sideBar {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content:flex-end;
+    right: 0;
+    bottom: 0;
+    width: 20vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.5);
+    text-align: center;
+}
+#sideBar button {
+    scale: 0.9;
+}
+#menuMode {
+    position: absolute;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    left: 50%;
+    top: 90%;
+    gap: 2vh;
+    font-size: 8vh;
+    color: white;
+    transform: translate(-50%,-50%);
+}
+#modeName {
+    width: 70vh;
+}
+#menuMode button {
+    width: 10vh;
+    height: 10vh;
+    font-size: 4vh;
+    color: white;
+    background-color: blue;
+    border: solid darkblue 0.5vh;
+}
+#menuMode button:hover {
+    filter: brightness(0.5);
+}
+#difficulties {
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+    background-color: rgba(0,0,0,0.5);
+    color: white;
+    font-size: 2vh;
+}
+#normalMode {
+    color: lime;
+}
+#difficulties div:hover {
+    scale: 1.1;
+}
+#tripleTLure {
+    position: absolute;
+    right: 5%;
+    top: 30%;
+    font-size: 8vh;
+    transform: translate(0,-50%);
+    color: white;
+    text-shadow: 0 0 1vh black;
+    background-image: url(assets/characterSelect/tripleT.png);
+    background-size: 100% 100%;
+    display: none;
+}
+#tripleTLure:hover {
+    transform: translate(0,-50%) scale(1.1);
+}
+#tripleTLure:active {
+    transform: translate(0,-50%) scale(0.9);
+}
+#plushtrap {
+    position: absolute;
+    left: 30%;
+    top: 30%;
+    width: 40vh;
+    height: 60vh;
+    background-image: url(assets/ingameCharacters/plushtrap.png);
+    background-size: 100% 100%;
 }

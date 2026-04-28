@@ -721,6 +721,10 @@ let shocking = false;
 let shockTransition = 0;
 window.addEventListener("keydown", (e) => {
     keys[e.key.toLowerCase()] = true;
+    console.log(e.key.toLowerCase());
+    if (e.key.toLowerCase() == "escape") {
+        scene = "menu";
+    }
     if (scene == "ingame") {
         if (power >= 0) {
             if (e.key.toLowerCase() == "a") {
@@ -1685,10 +1689,10 @@ function ingame(dt, time) {
             }
         } else if (ac.name == "natrwqfsfasxc") {
             ac.element.style.display = "block";
-            ac.timer += dt * nightMult * (charMode+2)/2;
-            ac.element.style.transform = `translate(calc(-50% + ${Math.sin(ac.timer)*500}%),calc(-50% + ${Math.sin(ac.timer) * Math.cos(ac.timer)*500}%))`;
+            ac.timer += dt * nightMult * (charMode+4)/4;
+            ac.element.style.transform = `translate(calc(-50% + ${Math.sin(ac.timer)*50}vh),calc(-50% + ${Math.sin(ac.timer) * Math.cos(ac.timer)*50}vh))`;
             ac.killTimer += dt * (ac.difficulty / 18+1) * (charMode+8)/8;
-            ac.element.style.filter = `brightness(${ac.killTimer / ac.killTime * 10})`;
+            ac.element.style.filter = `brightness(${ac.killTimer / ac.killTime * 15})`;
             if (ac.killTimer >= ac.killTime) {
                 die("natrwqfsfasxc");
             }
@@ -1780,6 +1784,7 @@ function die(killer) {
         sfx[key].pause();
         sfx[key].currentTime = 0;
     }
+    document.getElementById("deathPower").textContent = "Power: " + document.getElementById("power").textContent;
     document.getElementById("deathTime").textContent = document.getElementById("ingameTimer2").textContent;
     document.getElementById("killerText").textContent = "yuo deid to " + killer;
     document.getElementById("ingame").style.display = "none";

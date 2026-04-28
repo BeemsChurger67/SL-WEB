@@ -41,13 +41,19 @@ let characters = [
         moveTimer: 0,
         moveTime: 30,
         killTimer: 0,
-        killTime: 3,
+        killTime: 6,
+        leaveTimer: 0,
+        leaveTime: 0.5,
         rng: 0.5,
         side: 0, 
         menuImg: "assets/characterSelect/ballora.png",
         difficulty: 0,
+        amount: 0,
         element: null,
         description: "you will hear music and you have to close the door where its panning",
+        vHardDescription: "she appears twice now",
+        uHardDescription: "she appears thrice now",
+        perfectDescription: "she appears 4 times now its legit over",
     },
     {
         name: "funtime foxy",
@@ -63,6 +69,9 @@ let characters = [
         difficulty: 0,
         element: null,
         description: "hes in cam 7 and once he leaves close the right door",
+        vHardDescription: "if his left eye is closed close the right door but if his right is closed close the left door",
+        uHardDescription: "if both of his eyes are closed close the vent",
+        perfectDescription: "hes always on his final phase",
     },
     {
         name: "bonnet",
@@ -166,7 +175,7 @@ let characters = [
         killTimer: 0,
         killTime: 5,
         leaveTimer: 0,
-        leaveTime: 0.25,
+        leaveTime: 0.1,
         side: 0,
         camsOpened: false,
         active: false,
@@ -1196,10 +1205,12 @@ function ingame(dt, time) {
                     sound[ac.side].currentTime = 0;
                     sound[ac.side].pause();
                     sound[ac.side].play();
+                    console.log(ac.side);
                 }
-                ac.killTimer += dt * (ac.difficulty / 10+1);
-                if (ac.killTimer >= ac.killTime) {
-                    if (doors[ac.side*2]) {
+                ac.killTimer += dt / 100;
+                if (doors[ac.side*2]) {
+                    ac.leaveTimer += dt;
+                    if (ac.leaveTimer >= ac.leaveTime) {
                         ac.killTimer = 0;
                         ac.moveTimer = 0;
                         sfx.balloraLeft.currentTime = 0;
@@ -1209,7 +1220,17 @@ function ingame(dt, time) {
                         sfx.bonk.pause();
                         sfx.bonk.currentTime = 0;
                         sfx.bonk.play();
-                    } else {
+                        ac.leaveTimer = 0;
+                        ac.amount++;
+                        if (ac.amount > charMode-1) {
+                            ac.amount = 0;
+                        } else {
+                            ac.moveTimer = ac.moveTime-0.2;
+                        }
+                    }
+                } else {
+                    ac.killTimer += dt * (ac.difficulty / 10+1);
+                    if (ac.killTimer >= ac.killTime) {
                         die("ballora");
                     }
                 }
@@ -1260,7 +1281,7 @@ function ingame(dt, time) {
             if (ac.moveTimer >= ac.moveTime) {
                 ac.element.style.left = ac.x + "vw";
                 ac.element.style.display = "block";
-                ac.x -= dt * (ac.difficulty / 18+1) * 12;
+                ac.x -= dt * (ac.difficulty / 18+1) * 12 * (charMode+4)/4;
                 sfx.bonnet.play();
                 if (ac.x <= 0) {
                     die("bonnet");

@@ -65,11 +65,12 @@ let characters = [
         leaveTime: 1,
         rng: 0.5,
         phase: 0,
+        finalPhase: 0,
         menuImg: "assets/characterSelect/funtimeFoxy.png",
         difficulty: 0,
         element: null,
         description: "hes in cam 7 and once he leaves close the right door",
-        vHardDescription: "if his left eye is closed close the right door but if his right is closed close the left door",
+        vHardDescription: "if his right eye is open close the right door but if his left is open close the left door",
         uHardDescription: "if both of his eyes are closed close the vent",
         perfectDescription: "hes always on his final phase",
     },
@@ -83,6 +84,9 @@ let characters = [
         difficulty: 0,
         element: document.getElementById("bonnet"),
         description: "click nose",
+        vHardDescription: "he moves faster",
+        uHardDescription: "his moveTimer is faster",
+        perfectDescription: "bonnet.moveTimer = 0;",
     },
     {
         name: "ennard",
@@ -883,6 +887,7 @@ let officeFrameTime = 0;
 let powerOutFrame = false;
 let deaths = 0;
 let playtime = 0;
+let startingPower = 0;
 function ingame(dt, time) {
     let charMode = 0;
     if (ingameDifficulty == "hard mode") {
@@ -916,6 +921,7 @@ function ingame(dt, time) {
         mask = false;
         ingameTimer = 0;
         power = 100 * (charMode+6)/6;
+        startingPower = power;
         oxygen = 100;
         ingameTimer = 0;
         activeCharacters = [];
@@ -941,7 +947,6 @@ function ingame(dt, time) {
             sfx[key].pause();
             sfx[key].currentTime = 0;
         }
-
     }
     playtime += dt;
     ingameTimer += dt;
@@ -963,6 +968,14 @@ function ingame(dt, time) {
         }
     }
     if (cams.opened) {powerDrain++};
+    const secondsPace = power / startingPower * 360 % 60;
+    const minutesPace = power / startingPower * 360 / 60;
+    if (power >= 0) {
+        document.getElementById("powerPace").textContent = "Pace: " + Math.floor(minutesPace) + (secondsPace > 10 ? ":" : ":0") + Math.floor(secondsPace);
+    } else {
+        document.getElementById("powerPace").textContent = "Pace: your cooked buddy";
+    }
+
     document.getElementById("power").textContent = Math.floor(power) + "%";
     document.getElementById("oxygen").textContent = Math.floor(oxygen) + "%";
     shakeIntensity -= dt * 3;
@@ -1238,39 +1251,108 @@ function ingame(dt, time) {
         } else if (ac.name == "funtime foxy") {
             if (ac.moveTimer === 0) {
                 ac.rng = Math.random() + 0.5;
+                if (ac.phase == 3) {ac.finalPhase = Math.round(Math.random());}
+                if (charMode >= 3) {
+                    if (ac.phase == 3) {ac.finalPhase = Math.round(Math.random()*2);}
+                }
+                if (ac.phase == 0 && charMode == 4) {
+                    ac.phase = 3;
+                }
+                ac.moveTimer += dt;
             }
-            if (charMode >= 1) {
-                ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult * 1.5;
-            } else {
-                ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult;
+            const finalPhaseString = ["left", "vent", "right"];
+            if (ac.phase != 4) {
+                if (charMode >= 1) {
+                    ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult * 1.5;
+                } else {
+                    ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult;
+                }
             }
+
             if (cams.cam == 6) {
                 document.getElementById("camsBG").style.backgroundImage = "url(assets/funtimeFoxy/" + (ac.phase+1) + ".png)";
+                if (ac.phase == 3) {
+                    if (charMode == 2) {
+                        document.getElementById("camsBG").style.backgroundImage = "url(assets/funtimeFoxy/" + (ac.phase+1) + finalPhaseString[ac.finalPhase*2] + ".png)";
+                    } else if (charMode >= 3) {
+                        document.getElementById("camsBG").style.backgroundImage = "url(assets/funtimeFoxy/" + (ac.phase+1) + finalPhaseString[ac.finalPhase] + ".png)";
+                    }
+                }
             }
             if (ac.moveTimer >= ac.moveTime) {
                 ac.moveTimer = 0;
-                if (ac.phase != 4) {
-                    ac.phase++;
+                if (charMode == 4) {
+                    if (ac.phase == 3) {
+                        ac.phase = 4;
+                    } else {
+                        ac.phase = 3;
+                    }
+                } else {
+                    if (ac.phase != 4) {
+                        ac.phase++;
+                    }
                 }
             }
             if (ac.phase == 4) {
-                if (doors[2]) {
-                    ac.leaveTimer += dt;
-                    if (ac.leaveTimer >= ac.leaveTime) {
-                        ac.leaveTimer = 0;
-                        ac.killTimer = 0;
-                        ac.moveTimer = 0;
-                        ac.phase = 0;
-                        sfx.bonk.pause();
-                        sfx.bonk.currentTime = 0;
-                        sfx.bonk.play();
+                if (charMode == 2) {
+                    if (doors[ac.finalPhase*2]) {
+                        ac.leaveTimer += dt;
+                        console.log(ac.leaveTimer);
+                        if (ac.leaveTimer >= ac.leaveTime) {
+                            ac.leaveTimer = 0;
+                            ac.killTimer = 0;
+                            ac.moveTimer = 0;
+                            ac.phase = 0;
+                            sfx.bonk.pause();
+                            sfx.bonk.currentTime = 0;
+                            sfx.bonk.play();
+                        }
+                    } else {
+                        ac.killTimer += dt;
+                        if (ac.killTimer >= ac.killTime) {
+                            die("funtime foxy");
+                        }
+                    }
+                } else if (charMode >= 3) {
+                    if (doors[ac.finalPhase]) {
+                        ac.leaveTimer += dt;
+                        console.log(ac.finalPhase);
+                        console.log(ac.leaveTimer);
+                        if (ac.leaveTimer >= ac.leaveTime) {
+                            ac.leaveTimer = 0;
+                            ac.killTimer = 0;
+                            ac.moveTimer = 0;
+                            ac.phase = 0;
+                            sfx.bonk.pause();
+                            sfx.bonk.currentTime = 0;
+                            sfx.bonk.play();
+                        }
+                    } else {
+                        ac.killTimer += dt;
+                        if (ac.killTimer >= ac.killTime) {
+                            die("funtime foxy");
+                        }
                     }
                 } else {
-                    ac.killTimer += dt;
-                    if (ac.killTimer >= ac.killTime) {
-                        die("funtime foxy");
+                    if (doors[2]) {
+                        ac.leaveTimer += dt;
+                        console.log(ac.leaveTimer);
+                        if (ac.leaveTimer >= ac.leaveTime) {
+                            ac.leaveTimer = 0;
+                            ac.killTimer = 0;
+                            ac.moveTimer = 0;
+                            ac.phase = 0;
+                            sfx.bonk.pause();
+                            sfx.bonk.currentTime = 0;
+                            sfx.bonk.play();
+                        }
+                    } else {
+                        ac.killTimer += dt;
+                        if (ac.killTimer >= ac.killTime) {
+                            die("funtime foxy");
+                        }
                     }
-                }
+                } 
             }
         } else if (ac.name == "bonnet") {
             if (charMode >= 1) {
@@ -1278,8 +1360,9 @@ function ingame(dt, time) {
             } else {
                 ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult;
             }
+            if (charMode == 4) {ac.moveTimer = ac.moveTime}
             if (ac.moveTimer >= ac.moveTime) {
-                ac.element.style.left = ac.x + "vw";
+                ac.element.style.left = ac.x * (charMode+4)/4 + "vw";
                 ac.element.style.display = "block";
                 ac.x -= dt * (ac.difficulty / 18+1) * 12 * (charMode+4)/4;
                 sfx.bonnet.play();

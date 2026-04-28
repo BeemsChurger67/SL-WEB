@@ -325,8 +325,8 @@ body {
     left: 56%;
     top: 45%;
     transform: translate(-50%,-50%);
-    width: 8vh;
-    height: 8vh;
+    width: 16vh;
+    height: 16vh;
 }
 #ingame {
     position: absolute;
@@ -443,8 +443,8 @@ body {
     position: absolute;
     left: 50%;
     top: 50%;
-    width: 10vh;
-    height: 10vh;
+    width: 5vh;
+    height: 5vh;
     background-image: url(assets/characterSelect/glungus.png);
     background-size: 100% 100%;
     border-radius: 4vh;

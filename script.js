@@ -555,7 +555,7 @@ document.getElementById("difficulties").addEventListener("click", (e) => {
     }
     if (ingameDifficulty == difficulties[4]) {
         document.getElementById("menu").style.filter = "grayscale(1) contrast(1.5)";
-        document.getElementById("ingame").style.filter = "grayscale(1) contrast(1.5)";
+        document.getElementById("ingame").style.filter = "grayscale(1) contrast(1)";
     }
     difficultyModeName();
 }); 

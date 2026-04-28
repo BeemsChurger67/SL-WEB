@@ -1030,7 +1030,7 @@ function ingame(dt, time) {
             }
             if (ac.attacking) {
                 if (ac.killTimer === 0) {
-                    if (Math.random() > 0.8) {
+                    if (Math.random() > 0.6 && charMode == 4) {
                         sfx.ffLaugh.pause();
                         sfx.ffLaugh.currentTime = 0;
                         sfx.ffLaugh.play();

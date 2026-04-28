@@ -38,6 +38,10 @@
             <div id="characterDescription">
                 <div id="charName"></div>
                 <div id="charDescription"></div>
+                <div id="charHardDescription"></div>
+                <div id="charVHardDescription"></div>
+                <div id="charUHardDescription"></div>
+                <div id="charPerfectDescription"></div>
             </div>
             <div id="sideBar">
                 <div style="color: white; font-size: 5vh;">Difficulties</div>
@@ -93,8 +97,18 @@
             <div id="glungus"></div>
             <div id="blackTransition"></div>
             <div id="textUI">
-                <div>Power <div id="power">100%</div></div>
-                <div>Oxygen <div id="oxygen">100%</div></div>
+                <div>Power 
+                    <div style="display: flex; gap: 3vh;">
+                        <div id="power">100%</div>
+                        <div id="powerWarning"></div>
+                    </div>
+                </div>
+                <div>Oxygen
+                    <div style="display: flex; gap: 3vh;">
+                        <div id="oxygen">100%</div>
+                        <div id="oxygenWarning"></div>
+                    </div>
+                </div>
                 <div id="ingameTimer">12 AM</div>
                 <div id="ingameTimer2">0:00</div>
                 <div>Mult: <div id="nightMult">1.00x</div></div>

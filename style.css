@@ -1,6 +1,15 @@
+@font-face {
+    font-family: pixel;
+    src: url(assets/pixel.ttf);
+}
+@font-face {
+    font-family: camFont;
+    src: url(assets/camFont.otf);
+}
 body {
     user-select: none;
     overflow: hidden;
+    font-family: comic sans ms;
 }
 #officeBG, #leftDoor, #rightDoor, #vent {
     position: absolute;
@@ -109,21 +118,22 @@ body {
 }
 #camButtons button {
     position: absolute;
-    font-size: 3vh;
+    font-size: 3.5vh;
     width: 7vw;
     height: 5.5vh;
     padding: 0;
-    font-family:sans-serif;
     border: none;
-    background-color: white;
-    border: solid black 0.5vh;
+    background-color: rgb(25,25,25);
+    border: solid white 0.5vh;
+    font-family: camFont;
+    color: white;
     animation-timing-function: ease;
     animation-duration: 0.2s;
     animation-iteration-count: infinite;
     animation-delay: 0ms;
 }
 #camButtons button:hover {
-    filter: brightness(0.5);
+    filter: brightness(1.1);
 }
 #cams {
     display: none;
@@ -312,12 +322,12 @@ body {
     top: 6vh;
     font-size: 6vh;
     color: white;
-    font-family: monospace;
     text-shadow: 0 0 1vh black,0 0 1vh black,0 0 1vh black;
+    font-family: pixel
 }
 #pirate {
     position: absolute;
-    display: flex;
+    display: none;
     align-items: center;
     flex-direction: column;
     justify-content: center;
@@ -382,13 +392,28 @@ body {
 #charDescription {
     font-size: 2vh;
 }
+#charHardDescription {
+    color: red
+}
+#charVHardDescription {
+    color: black;
+    text-shadow: 0 0 1vh white, 0 0 1vh white, 0 0 1vh white;
+}
+#charUHardDescription {
+    color: black;
+    text-shadow: 0 0 1vh white, 0 0 1vh white, 0 0 1vh white;
+}
+#charPerfectDescription {
+    color: black;
+    text-shadow: 0 0 1vh white, 0 0 1vh white, 0 0 1vh white;
+}
 #characterDescription {
     position: absolute;
     display: none;
     transform: translate(1vh, -50%);
     width: 30vh;
     height: 17vh;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0,0,0,0.8);
     color: white;
 }
 #glungus {
@@ -529,4 +554,10 @@ body {
     background-image: url(assets/ingameCharacters/bonnie.png);
     background-size: 100% 100%;
     transform: translate(-50%,20%);
+}
+#powerWarning, #oxygenWarning {
+    width: 5vh;
+    height: 5vh;
+    background-image: url(assets/warning.png);
+    background-size: 100% 100%;
 }

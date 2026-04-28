@@ -12,7 +12,6 @@ let characters = [
         difficulty: 0,
         element: document.getElementById("baby"),
         description: "she will say a voiceline and then find her in cams 1,2,5 and shock it",
-        hardDescription: "she appears faster",
         vHardDescription: "theres 2 of them gg",
         uHardDescription: "she appears faster",
         perfectDescription: "theres 3 of them and they appear in cams 1-5",
@@ -33,6 +32,9 @@ let characters = [
         firstFrame: false,
         element: null,
         description: "is either in the left or right if he says bon bon go get him close the corresponding door but if he says get ready for a surprise close the opposite door",
+        vHardDescription: "when he bonks his movetimer doesnt reset",
+        uHardDescription: "you cant hear him run anymore gg",
+        perfectDescription: "when he laughs he will run to the opposite door close it",
     },
     {
         name: "ballora",
@@ -41,7 +43,7 @@ let characters = [
         killTimer: 0,
         killTime: 3,
         rng: 0.5,
-        side: 0,
+        side: 0, 
         menuImg: "assets/characterSelect/ballora.png",
         difficulty: 0,
         element: null,
@@ -383,6 +385,7 @@ const sounds = {
     ffRTL: "assets/soundEffects/funtimeFreddyRTL.mp3",
     ffAttack1: "assets/soundEffects/funtimeFreddyAttack1.mp3",
     ffAttack2: "assets/soundEffects/funtimeFreddyAttack2.mp3",
+    ffLaugh: "assets/soundEffects/freddyLaugh.mp3",
     bonk: "assets/soundEffects/bonk.mp3",
     shock: "assets/soundEffects/shock.mp3",
     balloraLeft: "assets/soundEffects/balloraLeft.mp3",
@@ -976,7 +979,7 @@ function ingame(dt, time) {
                 if (ac.killTimer === 0) {
                     sfx.babySound.play();
                     for (let i = 0; i<0.5+charMode/2; i++) {
-                        if (ac.charMode >= 4) {
+                        if (charMode >= 4) {
                             ac.cams.push(Math.round(Math.random() * 4));
                         } else {
                             ac.cams.push(Math.round(Math.random() * 2));
@@ -1027,19 +1030,34 @@ function ingame(dt, time) {
             }
             if (ac.attacking) {
                 if (ac.killTimer === 0) {
-                    if (Math.random() > 0.5) {
-                        sfx.ffAttack1.pause();
-                        sfx.ffAttack1.currentTime = 0;
-                        sfx.ffAttack1.play();
-                        ac.attack = 0;
+                    if (Math.random() > 0.8) {
+                        sfx.ffLaugh.pause();
+                        sfx.ffLaugh.currentTime = 0;
+                        sfx.ffLaugh.play();
+                        if (ac.side == "left") {
+                            sfx.ffLTR.pause();
+                            sfx.ffLTR.currentTime = 0;
+                            sfx.ffLTR.play();
+                        } else {
+                            sfx.ffRTL.pause();
+                            sfx.ffRTL.currentTime = 0;
+                            sfx.ffRTL.play();
+                        }
+                        ac.attack = 2;
                     } else {
-                        sfx.ffAttack2.pause();
-                        sfx.ffAttack2.currentTime = 0;
-                        sfx.ffAttack2.play();
-                        ac.attack = 1;
+                        if (Math.random() > 0.5) {
+                            sfx.ffAttack1.pause();
+                            sfx.ffAttack1.currentTime = 0;
+                            sfx.ffAttack1.play();
+                            ac.attack = 0;
+                        } else {
+                            sfx.ffAttack2.pause();
+                            sfx.ffAttack2.currentTime = 0;
+                            sfx.ffAttack2.play();
+                            ac.attack = 1;
+                        }
                     }
                 }
-                console.log(ac.killTimer);
                 ac.killTimer += dt;
                 if (ac.killTimer >= ac.killTime) {
                     if (ac.side == "left") {
@@ -1050,18 +1068,35 @@ function ingame(dt, time) {
                                 sfx.bonk.pause();
                                 sfx.bonk.currentTime = 0;
                                 sfx.bonk.play();
-                                ac.moveTimer = 0;
+                                if (charMode <= 1) {
+                                    ac.moveTimer = 0;
+                                }
                             } else {
                                 die("funtime freddy");
                             }
-                        } else {
+                        } else if (ac.attack == 1) {
                             if (doors[2]) {
                                 ac.attacking = false;
                                 ac.killTimer = 0;
                                 sfx.bonk.pause();
                                 sfx.bonk.currentTime = 0;
                                 sfx.bonk.play();
-                                ac.moveTimer = 0;
+                                if (charMode <= 1) {
+                                    ac.moveTimer = 0;
+                                }
+                            } else {
+                                die("funtime freddy");
+                            }
+                        } else if (ac.attack == 2) {
+                            if (doors[2]) {
+                                ac.attacking = false;
+                                ac.killTimer = 0;
+                                sfx.bonk.pause();
+                                sfx.bonk.currentTime = 0;
+                                sfx.bonk.play();
+                                if (charMode <= 1) {
+                                    ac.moveTimer = 0;
+                                }
                             } else {
                                 die("funtime freddy");
                             }
@@ -1075,18 +1110,37 @@ function ingame(dt, time) {
                                 sfx.bonk.pause();
                                 sfx.bonk.currentTime = 0;
                                 sfx.bonk.play();
-                                ac.moveTimer = 0;
+                                if (charMode <= 1) {
+                                    ac.moveTimer = 0;
+                                }
+                                ac.killTimer = 0;
                             } else {
                                 die("funtime freddy");
                             }
-                        } else {
+                        } else if (ac.attack == 1) {
                             if (doors[0]) {
                                 ac.attacking = false;
                                 ac.killTime[0] = 0;
                                 sfx.bonk.pause();
                                 sfx.bonk.currentTime = 0;
                                 sfx.bonk.play();
-                                ac.moveTimer = 0;
+                                if (charMode <= 1) {
+                                    ac.moveTimer = 0;
+                                }
+                                ac.killTimer = 0;
+                            } else {
+                                die("funtime freddy");
+                            }
+                        } else if (ac.attack == 2) {
+                            if (doors[0]) {
+                                ac.attacking = false;
+                                ac.killTimer = 0;
+                                sfx.bonk.pause();
+                                sfx.bonk.currentTime = 0;
+                                sfx.bonk.play();
+                                if (charMode <= 1) {
+                                    ac.moveTimer = 0;
+                                }
                             } else {
                                 die("funtime freddy");
                             }
@@ -1103,14 +1157,18 @@ function ingame(dt, time) {
                     if (Math.random() > 0.5) {
                         if (ac.side == "right") {
                             ac.side = "left";
-                            sfx.ffRTL.pause();
-                            sfx.ffRTL.currentTime = 0;
-                            sfx.ffRTL.play();
+                            if (charMode <= 2) {
+                                sfx.ffRTL.pause();
+                                sfx.ffRTL.currentTime = 0;
+                                sfx.ffRTL.play();
+                            }
                         } else {
                             ac.side = "right";
-                            sfx.ffLTR.pause();
-                            sfx.ffLTR.currentTime = 0;
-                            sfx.ffLTR.play();
+                            if (charMode <= 2) {
+                                sfx.ffLTR.pause();
+                                sfx.ffLTR.currentTime = 0;
+                                sfx.ffLTR.play();
+                            }
                         }
                         ac.moveTimer = 0;
                     } else {

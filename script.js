@@ -872,6 +872,8 @@ let winOpacity = 0;
 let officeFrame = 0;
 let officeFrameTime = 0;
 let powerOutFrame = false;
+let deaths = 0;
+let playtime = 0;
 function ingame(dt, time) {
     if (!firstFrame[1]) {
         resetFF();
@@ -920,7 +922,9 @@ function ingame(dt, time) {
             sfx[key].pause();
             sfx[key].currentTime = 0;
         }
+
     }
+    playtime += dt;
     ingameTimer += dt;
     let seconds = ingameTimer % 60;
     document.getElementById("ingameTimer").textContent = textDisplay[Math.floor(ingameTimer/60)];
@@ -1835,6 +1839,12 @@ function menu(dt, time) {
             sfx[key].pause();
             sfx[key].currentTime = 0;
         }
+        const seconds = playtime % 60;
+        const minutes = playtime / 60 % 60;
+        const hours = playtime / 60 / 60;
+        document.getElementById("playtime").textContent = "Playtime: " + Math.floor(hours) + (minutes > 10 ? ":" : ":0") + Math.floor(minutes) + (seconds > 10 ? ":" : ":0") + Math.floor(seconds);
+        document.getElementById("deaths").textContent = "Deaths: " + deaths;
+        save();
     }
     sfx.menuTheme.play();
     document.getElementById("menuBG").style.backgroundPositionX = -time / 100 + "vw";
@@ -1846,6 +1856,7 @@ function die(killer) {
         sfx[key].pause();
         sfx[key].currentTime = 0;
     }
+    deaths++;
     document.getElementById("deathPower").textContent = "Power: " + document.getElementById("power").textContent;
     document.getElementById("deathTime").textContent = document.getElementById("ingameTimer2").textContent;
     document.getElementById("killerText").textContent = "yuo deid to " + killer;
@@ -1888,10 +1899,14 @@ document.getElementById("antiPirate").addEventListener("change", (e) => {
 let pirate = false;
 let saveFile = {
     pirate: false,
+    playtime: 0,
+    deaths: 0,
 }
 function save() {
     saveFile = {
         pirate: pirate,
+        playtime: playtime,
+        deaths: deaths,
     }
     localStorage.setItem("dataSL", JSON.stringify(saveFile));
 }
@@ -1901,6 +1916,8 @@ function load() {
     console.log(dataParsed)
     if (dataParsed == null) return;
     if (dataParsed.pirate !== undefined) pirate = dataParsed.pirate;
+    if (dataParsed.playtime !== undefined) playtime = dataParsed.playtime;
+    if (dataParsed.deaths !== undefined) deaths = dataParsed.deaths;
 }
 load();
 function update(time) {

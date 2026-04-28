@@ -1050,6 +1050,7 @@ function ingame(dt, time) {
                                 sfx.bonk.pause();
                                 sfx.bonk.currentTime = 0;
                                 sfx.bonk.play();
+                                ac.moveTimer = 0;
                             } else {
                                 die("funtime freddy");
                             }
@@ -1060,6 +1061,7 @@ function ingame(dt, time) {
                                 sfx.bonk.pause();
                                 sfx.bonk.currentTime = 0;
                                 sfx.bonk.play();
+                                ac.moveTimer = 0;
                             } else {
                                 die("funtime freddy");
                             }
@@ -1073,6 +1075,7 @@ function ingame(dt, time) {
                                 sfx.bonk.pause();
                                 sfx.bonk.currentTime = 0;
                                 sfx.bonk.play();
+                                ac.moveTimer = 0;
                             } else {
                                 die("funtime freddy");
                             }
@@ -1083,6 +1086,7 @@ function ingame(dt, time) {
                                 sfx.bonk.pause();
                                 sfx.bonk.currentTime = 0;
                                 sfx.bonk.play();
+                                ac.moveTimer = 0;
                             } else {
                                 die("funtime freddy");
                             }

@@ -290,6 +290,27 @@ body {
     background-size: 100% 100%;
     transform: translate(-50%,-50%);
 }
+#goofyGoober {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-image: url(assets/characterSelect/goofyGoober.png);
+    background-size: 100% 100%;
+    pointer-events: none;
+    opacity: 0;
+}
+#natrwqfsfasxc {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 5vh;
+    height: 5vh;
+    background-image: url(assets/characterSelect/natrwqfsfasxc.png);
+    background-size: 100% 100%;
+    transform: translate(-50%,-50%);
+}
 #lolbitSequence {
     position: absolute;
     left: 50%;

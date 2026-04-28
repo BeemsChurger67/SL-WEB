@@ -234,10 +234,12 @@ let characters = [
     },
     {
         name: "GoofyGoober",
+        killTimer: 0,
+        killTime: 10,
         menuImg: "assets/characterSelect/goofyGoober.png",
         difficulty: 0,
-        element: null,
-        description: "no idea yet",
+        element: document.getElementById("goofyGoober"),
+        description: "when you open cams he will slowly fade in. close cams to reset his killTimer",
     },
     {
         name: "4_YT",
@@ -303,12 +305,13 @@ let characters = [
     },
     {
         name: "natrwqfsfasxc",
-        x: 0,
-        y: 0,
+        timer: 0,
+        killTimer: 0,
+        killTime: 15,
         menuImg: "assets/characterSelect/natrwqfsfasxc.png",
         difficulty: 0,
-        element: null,
-        description: "he is in the office you need to look at him to reset his killTimer",
+        element: document.getElementById("natrwqfsfasxc"),
+        description: "he is in the office and his killTimer is increasing and you have to click him to reset his killTimer",
     },
 ];
 let activeCharacters = [];
@@ -407,6 +410,7 @@ const sounds = {
     camChange: "assets/soundEffects/camChange.mp3",
     powerOut: "assets/soundEffects/powerOut.wav",
     powerOutAmbience: "assets/soundEffects/powerOutAmbience.wav",
+    buttonPress: "assets/soundEffects/buttonPress.wav",
 }
 let sfx = {};
 let sfxLoadedCount = 0;
@@ -822,6 +826,9 @@ document.getElementById("bonnetHitbox").addEventListener("mousedown", (e) => {
             activeCharacters[i].x = 110;
             sfx.bonnet.pause();
             sfx.bonnet.currentTime = 0;
+            sfx.buttonPress.pause();
+            sfx.buttonPress.currentTime = 0;
+            sfx.buttonPress.play();
         }
     }
 });
@@ -841,6 +848,16 @@ document.getElementById("bamboo").addEventListener("mousedown", (e) => {
             activeCharacters[i].moveTimer = 0;
             activeCharacters[i].killTimer = 0;
             document.getElementById("bamboo").style.display = "none";
+        }
+    }
+});
+document.getElementById("natrwqfsfasxc").addEventListener("mousedown", (e) => {
+    for (let i = 0; i<activeCharacters.length; i++) {
+        if (activeCharacters[i].name == "natrwqfsfasxc") {
+            activeCharacters[i].killTimer = 0;
+            sfx.buttonPress.pause();
+            sfx.buttonPress.currentTime = 0;
+            sfx.buttonPress.play();
         }
     }
 });
@@ -1531,18 +1548,36 @@ function ingame(dt, time) {
                 }
             }
         } else if (ac.name == "GoofyGoober") {
-            
+            if (cams.opened) {
+                if (charMode >= 1) {
+                    ac.killTimer += dt * (ac.difficulty / 18+1) * nightMult * 1.5;
+                } else {
+                    ac.killTimer += dt * (ac.difficulty / 18+1) * nightMult;
+                }
+                if (ac.killTimer >= ac.killTime) {
+                    die("GoofyGoober");
+                }
+                ac.element.style.opacity = ac.killTimer / ac.killTime;
+                ac.element.style.display = "block";
+            } else {
+                ac.killTimer = 0;
+                ac.element.style.display = "none";
+            }
         } else if (ac.name == "4_YT") {
             if (charMode >= 4) {
                 nightMult = (360/(14400*2)*ac.difficulty*5/2)+1;
             } else {
-                nightMult = (ingameTimer/(14400*2)*ac.difficulty*(charMode+2)/2)+1;
+                nightMult += (dt/(14400*2)*ac.difficulty*(charMode+2)/2);
             }
         } else if (ac.name == "bonnie") {
             if (ac.moveTimer === 0) {
                 ac.rng = Math.random() + 0.5;
             }
-            ac.moveTimer += dt * (ac.difficulty / 18 +1) * ac.rng * nightMult * (charMode+4)/4;
+            if (charMode >= 1) {
+                ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult * 1.5;
+            } else {
+                ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult;
+            }
             ac.element.style.display = "none";
             if (ac.moveTimer >= ac.moveTime) {
                 const bgRect = document.getElementById("officeBG");
@@ -1648,6 +1683,14 @@ function ingame(dt, time) {
                     die("pandimai");
                 }
             }
+        } else if (ac.name == "natrwqfsfasxc") {
+            ac.element.style.display = "block";
+            ac.timer += dt * nightMult * (charMode+2)/2;
+            ac.element.style.transform = `translate(calc(-50% + ${Math.sin(ac.timer)*500}%),calc(-50% + ${Math.sin(ac.timer) * Math.cos(ac.timer)*500}%))`;
+            ac.killTimer += dt * (ac.difficulty / 18+1) * (charMode+8)/8;
+            if (ac.killTimer >= ac.killTime) {
+                die("natrwqfsfasxc");
+            }
         }
     }
     oxygen += dt * 10;
@@ -1675,7 +1718,7 @@ function ingame(dt, time) {
             doors[0] = false;
             doors[1] = false;
             doors[2] = false;
-            camsOpened = false;
+            cams.opened = false;
             document.getElementById("leftDoor").style.display = "none";
             document.getElementById("rightDoor").style.display = "none";
             document.getElementById("vent").style.display = "none";

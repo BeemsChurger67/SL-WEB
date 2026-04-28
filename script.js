@@ -241,7 +241,7 @@ let characters = [
         menuImg: "assets/characterSelect/damon.png",
         difficulty: 0,
         element: null,
-        description: "a sound cue will play and you have to search every cam to find grillrat.exe",
+        description: "a sound cue will play and you have to search every cam to find grillrat.exe, also shock that camera",
     },
     {
         name: "GoofyGoober",
@@ -884,6 +884,16 @@ let powerOutFrame = false;
 let deaths = 0;
 let playtime = 0;
 function ingame(dt, time) {
+    let charMode = 0;
+    if (ingameDifficulty == "hard mode") {
+        charMode = 1;
+    } else if (ingameDifficulty == "very hard mode") {
+        charMode = 2;
+    } else if (ingameDifficulty == "ultra hard mode") {
+        charMode = 3;
+    } else if (ingameDifficulty == "perfect mode") {
+        charMode = 4;
+    }
     if (!firstFrame[1]) {
         resetFF();
         firstFrame[1] = true;
@@ -905,7 +915,7 @@ function ingame(dt, time) {
         doors = [false,false,false];
         mask = false;
         ingameTimer = 0;
-        power = 100;
+        power = 100 * (charMode+6)/6;
         oxygen = 100;
         ingameTimer = 0;
         activeCharacters = [];
@@ -964,16 +974,6 @@ function ingame(dt, time) {
     let missShock = false;
     if (shocking) {
         missShock = true;
-    }
-    let charMode = 0;
-    if (ingameDifficulty == "hard mode") {
-        charMode = 1;
-    } else if (ingameDifficulty == "very hard mode") {
-        charMode = 2;
-    } else if (ingameDifficulty == "ultra hard mode") {
-        charMode = 3;
-    } else if (ingameDifficulty == "perfect mode") {
-        charMode = 4;
     }
     document.getElementById("powerWarning").style.display = "none";
     document.getElementById("oxygenWarning").style.display = "none";
@@ -1656,7 +1656,7 @@ function ingame(dt, time) {
             }
         } else if (ac.name == "4_YT") {
             if (charMode >= 4) {
-                nightMult = (360/(14400*2)*ac.difficulty*5/2)+1;
+                nightMult = 1.66;
             } else {
                 nightMult += (dt/(14400*2)*ac.difficulty*(charMode+2)/2);
             }

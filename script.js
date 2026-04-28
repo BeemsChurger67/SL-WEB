@@ -1337,7 +1337,7 @@ function ingame(dt, time) {
                 if (doors[ac.side]) {
                     ac.active = false;
                 }
-                oxygen -= 70 * dt;
+                oxygen -= 45 * dt;
                 document.getElementById("oxygenWarning").style.display = "block";
             } else {
                 ac.element.style.display = "none";

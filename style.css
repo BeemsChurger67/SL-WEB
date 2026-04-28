@@ -10,6 +10,8 @@ body {
     user-select: none;
     overflow: hidden;
     font-family: comic sans ms;
+    background-image: url(assets/loading.png);
+    background-size: 100vw 100vh;
 }
 #officeBG, #leftDoor, #rightDoor, #vent {
     position: absolute;

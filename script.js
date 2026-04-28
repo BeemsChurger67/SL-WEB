@@ -467,7 +467,7 @@ const maxModes = [
 let difficultyModeNames = [
     "Unfuntime Gala",
     "Hardtime Gala",
-    "Extreme Gala",
+    "Arbys Meat Mountain",
     "COGNITION",
     "PERFECT BEEMACOPHONY",
 ]

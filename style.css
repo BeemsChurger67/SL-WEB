@@ -414,7 +414,7 @@ body {
     display: none;
     transform: translate(1vh, -50%);
     width: 30vh;
-    height: 17vh;
+    height: auto;
     background-color: rgba(0,0,0,0.8);
     color: white;
 }

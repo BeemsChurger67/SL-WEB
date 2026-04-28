@@ -307,7 +307,7 @@ let characters = [
         name: "natrwqfsfasxc",
         timer: 0,
         killTimer: 0,
-        killTime: 15,
+        killTime: 25,
         menuImg: "assets/characterSelect/natrwqfsfasxc.png",
         difficulty: 0,
         element: document.getElementById("natrwqfsfasxc"),
@@ -1688,6 +1688,7 @@ function ingame(dt, time) {
             ac.timer += dt * nightMult * (charMode+2)/2;
             ac.element.style.transform = `translate(calc(-50% + ${Math.sin(ac.timer)*500}%),calc(-50% + ${Math.sin(ac.timer) * Math.cos(ac.timer)*500}%))`;
             ac.killTimer += dt * (ac.difficulty / 18+1) * (charMode+8)/8;
+            ac.element.style.filter = `brightness(${ac.killTimer / ac.killTime * 10})`;
             if (ac.killTimer >= ac.killTime) {
                 die("natrwqfsfasxc");
             }

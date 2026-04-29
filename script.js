@@ -86,7 +86,7 @@ let characters = [
         description: "click nose",
         vHardDescription: "he moves faster",
         uHardDescription: "his moveTimer is faster",
-        perfectDescription: "bonnet.moveTimer = 0;",
+        perfectDescription: "those who know",
     },
     {
         name: "ennard",
@@ -94,7 +94,7 @@ let characters = [
         moveTimer: 0,
         moveTime: 25,
         killTimer: 0,
-        killTime: 4,
+        killTime: 5,
         leaveTimer: 0,
         leaveTime: 0.7,
         side: 0,
@@ -103,6 +103,9 @@ let characters = [
         difficulty: 0,
         element: null,
         description: "appears in either the left or right door or vent and you have to close them when you hear a loud bang",
+        vHardDescription: "movetimer goes way faster",
+        uHardDescription: "movetimer goes way way faster",
+        perfectDescription: "movetimer goes way way way faster",
     },
     {
         name: "bidybab",
@@ -118,6 +121,9 @@ let characters = [
         difficulty: 0,
         element: null,
         description: "appears in the top vent shock him to make him go back before he kills you. If ennard is in the vent bidybab doesnt move",
+        vHardDescription: "movetimer goes way faster",
+        uHardDescription: "movetimer goes way way faster",
+        perfectDescription: "movetimer goes way way way faster",
     },
     {
         name: "electrobab",
@@ -129,11 +135,15 @@ let characters = [
         side: 3,
         element: null,
         description: "shock the cam he is in its either cam03 or cam04",
+        vHardDescription: "movetimer goes way faster",
+        uHardDescription: "they can appear in every cam",
+        perfectDescription: "they drain power faster",
     },
     {
         name: "yenndo",
         killTime: 0,
         side: 0,
+        appeared: false,
         leaveTimer: 0,
         leaveTime: 0.5,
         camsOpened: false,
@@ -141,7 +151,10 @@ let characters = [
         menuImg: "assets/characterSelect/yenndo.png",
         difficulty: 0,
         element: document.getElementById("yenndo"),
-        description: "he appears once you close cams if hes on the right close the right door if hes on the left close the left door if hes on the middle close the vent",
+        description: "once he appears quickly flip up cams",
+        vHardDescription: "he appears once you close cams if hes on the right close the right door if hes on the left close the left door if hes on the middle close the vent",
+        uHardDescription: "he drains your power but slowly",
+        perfectDescription: "they drain oxygen faster",
     },
     {
         name: "lolbit",
@@ -158,7 +171,10 @@ let characters = [
         difficulty: 0,
         element: document.getElementById("lolbit"),
         textElement: document.getElementById("lolbitSequence"),
-        description: "press the number on the top of your screen or he will take your power"
+        description: "press the number on the top of your screen or he will take your power",
+        vHardDescription: "the number is in a random part of the screen except power is a bit more forgiving",
+        uHardDescription: "extra number",
+        perfectDescription: "extra number",
     },
     {
         name: "minireena 1",
@@ -169,7 +185,10 @@ let characters = [
         menuImg: "assets/characterSelect/minireena.png",
         difficulty: 0,
         element: document.getElementById("minireena2"),
-        description: "appears in the cams but will be highlighted hes taking your oxygen"
+        description: "appears in the cams but will be highlighted hes taking your oxygen",
+        vHardDescription: "2 minireenas",
+        uHardDescription: "3 minireenas",
+        perfectDescription: "try to guess... 4 minireenas",
     },
     {
         name: "minireena 2",
@@ -186,7 +205,10 @@ let characters = [
         menuImg: "assets/characterSelect/minireena2.png",
         difficulty: 0,
         element: document.getElementById("minireena"),
-        description: "he has a 20% chance to appear when you close cams put the mask on"
+        description: "he has a 20% chance to appear when you close cams put the mask on",
+        vHardDescription: "30% chance",
+        uHardDescription: "40% chance",
+        perfectDescription: "50% chance",
     },
     {
         name: "NotThatBruh",
@@ -201,6 +223,9 @@ let characters = [
         difficulty: 0,
         element: null,
         description: "he will make a voiceline before he makes loud banging noises close the top vent",
+        vHardDescription: "killTimer is shorter",
+        uHardDescription: "moveTimer is faster",
+        perfectDescription: "no more voiceline to be prepared",
     },
     {
         name: "glungus",
@@ -210,6 +235,9 @@ let characters = [
         difficulty: 0,
         element: document.getElementById("glungus"),
         description: "glungus follows your mouse.",
+        vHardDescription: "glungus faster",
+        uHardDescription: "glungus big",
+        perfectDescription: "glungus takes oxygen on contact",
     },
     {
         name: "triple T",
@@ -221,6 +249,9 @@ let characters = [
         difficulty: 0,
         element: null,
         description: "in CAM06 theres a audio lure button. once you hear tung tung tung sahur you need to press the audio lure button or else....",
+        vHardDescription: "killTimer is 1s shorter",
+        uHardDescription: "moveTimer is faster",
+        perfectDescription: "moveTimer is faster",
     },
     {
         name: "plushtrap",
@@ -234,6 +265,9 @@ let characters = [
         difficulty: 0,
         element: document.getElementById("plushtrap"),
         description: "appears in CAM06 and you just gotta look at him",
+        vHardDescription: "killTimer is 1s shorter",
+        uHardDescription: "moveTimer is faster",
+        perfectDescription: "moveTimer is faster",
     },
     {
         name: "grillrat.exe",
@@ -246,6 +280,9 @@ let characters = [
         difficulty: 0,
         element: null,
         description: "a sound cue will play and you have to search every cam to find grillrat.exe, also shock that camera",
+        vHardDescription: "moveTimer is faster",
+        uHardDescription: "moveTimer is faster",
+        perfectDescription: "He is now a permanent threat however his killtimer is increased",
     },
     {
         name: "GoofyGoober",
@@ -255,6 +292,9 @@ let characters = [
         difficulty: 0,
         element: document.getElementById("goofyGoober"),
         description: "when you open cams he will slowly fade in. close cams to reset his killTimer",
+        vHardDescription: "if you close cams goofy will slowly fade out instead of fading fully out instantly",
+        uHardDescription: "his killTimer is increased",
+        perfectDescription: "his killTimer is increased",
     },
     {
         name: "4_YT",
@@ -262,6 +302,9 @@ let characters = [
         difficulty: 0,
         element: null,
         description: "Night multiplier goes up",
+        vHardDescription: "multiplier goes up faster",
+        uHardDescription: "multiplier goes up faster",
+        perfectDescription: "he becomes ETERNAL so the difficulty is 1.66x all night",
     },
     {
         name: "bonnie",
@@ -275,6 +318,9 @@ let characters = [
         difficulty: 0,
         element: document.getElementById("bonnie"),
         description: "Appears in the office just put the mask on. he will make a buzzing sound",
+        vHardDescription: "appears faster",
+        uHardDescription: "killTimer is shorter",
+        perfectDescription: "killTimer is shorter",
     },
     {
         name: "golden freddy",
@@ -290,6 +336,9 @@ let characters = [
         difficulty: 0,
         element: document.getElementById("goldenFreddy"),
         description: "can appear when you close cams and you need to put the mask on or open cams",
+        vHardDescription: "appears faster",
+        uHardDescription: "if you open cams you die",
+        perfectDescription: "killTimer is almost instant so immediatly when you close cams put the mask on for a frame",
     },
     {
         name: "irl candy",
@@ -304,6 +353,9 @@ let characters = [
         door: 0,
         element: document.getElementById("irlCandy"),
         description: "he appears on the doors close it to avoid him",
+        vHardDescription: "appears faster",
+        uHardDescription: "appears faster",
+        perfectDescription: "appears faster",
     },
     {
         name: "pandimai",
@@ -317,6 +369,9 @@ let characters = [
         element: document.getElementById("pandimai"),
         bambooElement: document.getElementById("bamboo"),
         description: "once he appears in the office you have to find bamboo in the cams",
+        vHardDescription: "appears faster",
+        uHardDescription: "killTimer is shorter",
+        perfectDescription: "once you click one bamboo you have to click the other one",
     },
     {
         name: "natrwqfsfasxc",
@@ -327,6 +382,9 @@ let characters = [
         difficulty: 0,
         element: document.getElementById("natrwqfsfasxc"),
         description: "he is in the office and his killTimer is increasing and you have to click him to reset his killTimer",
+        vHardDescription: "appears faster",
+        uHardDescription: "killTimer is shorter",
+        perfectDescription: "more movement opportunities",
     },
 ];
 let activeCharacters = [];
@@ -633,7 +691,7 @@ function checkMaxMode() {
                 charactersCheckMatching++;
             }
         }
-        if (charactersCheckMatching == characters.length-1) {
+        if (charactersCheckMatching == characters.length) {
             maxModesIndex = i;
             document.getElementById("modeName").textContent = maxModes[i][0];
         }
@@ -650,9 +708,9 @@ document.getElementById("characters").addEventListener("mousedown", (e) => {
         if (cd >= 20) {
             cd = 20;
         }
-        checkMaxMode();
         characters[char].difficulty = cd;
         document.getElementById("cd_" + char).textContent = cd;
+        checkMaxMode();
     }
     if (e.target.id.includes("md_")) {
         let char = e.target.dataset.char;
@@ -664,9 +722,9 @@ document.getElementById("characters").addEventListener("mousedown", (e) => {
         if (cd <= 0) {
             cd = 0;
         }
-        checkMaxMode();
         characters[char].difficulty = cd;
         document.getElementById("cd_" + char).textContent = cd;
+        checkMaxMode();
     }
 });
 document.getElementById("characters").addEventListener("mousemove", (e) => {
@@ -975,7 +1033,6 @@ function ingame(dt, time) {
     } else {
         document.getElementById("powerPace").textContent = "Pace: your cooked buddy";
     }
-
     document.getElementById("power").textContent = Math.floor(power) + "%";
     document.getElementById("oxygen").textContent = Math.floor(oxygen) + "%";
     shakeIntensity -= dt * 3;
@@ -1360,9 +1417,8 @@ function ingame(dt, time) {
             } else {
                 ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult;
             }
-            if (charMode == 4) {ac.moveTimer = ac.moveTime}
             if (ac.moveTimer >= ac.moveTime) {
-                ac.element.style.left = ac.x * (charMode+4)/4 + "vw";
+                ac.element.style.left = ac.x + "vw";
                 ac.element.style.display = "block";
                 ac.x -= dt * (ac.difficulty / 18+1) * 12 * (charMode+4)/4;
                 sfx.bonnet.play();
@@ -1378,7 +1434,7 @@ function ingame(dt, time) {
                 ac.side = Math.round(Math.random()*2);
             }
             if (charMode >= 1) {
-                ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult * 1.5;
+                ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult * 1.5 * (charMode+2)/2;
             } else {
                 ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult;
             }
@@ -1441,7 +1497,7 @@ function ingame(dt, time) {
             }
             if (!doors[1] && !ennardVent) {
                 if (charMode >= 1) {
-                    ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult * 1.5;
+                    ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult * 1.5 * (charMode+2)/2;
                 } else {
                     ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult;
                 }
@@ -1472,16 +1528,33 @@ function ingame(dt, time) {
             }
         } else if (ac.name == "electrobab") {
             if (ac.moveTimer === 0) {
-                ac.side = Math.round(Math.random()+2);
-                ac.rng = Math.random() + 0.5;;
+                if (charMode == 4) {
+                    ac.side = Math.round(Math.random()*6);
+                } else {
+                    ac.side = Math.round(Math.random()+2);
+                }
+                ac.rng = Math.random() + 0.5;
             }
-            ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult * (charMode+4)/4;
+            if (charMode >= 1) {
+                ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult * 1.5;
+            }
+            if (charMode >= 2) {
+                ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult * 2;
+            }
             if (ac.moveTimer >= ac.moveTime) {
-                powerDrain += 0.5;
+                if (charMode == 4) {
+                    powerDrain += 1;
+                } else {
+                    powerDrain += 0.5;
+                }
                 document.getElementById("powerWarning").style.display = "block";
                 document.getElementById("cam" + (ac.side+1)).style.animationName = "camAnim";
                 if (cams.opened && cams.cam == ac.side) {
-                    document.getElementById("camsBG").style.backgroundImage = "url(assets/electrobab/" + ac.side + ".png)";
+                    if (charMode == 4) {
+                        document.getElementById("camsBG").style.backgroundImage = "url(assets/electrobab/2.png)";
+                    } else {
+                        document.getElementById("camsBG").style.backgroundImage = "url(assets/electrobab/" + ac.side + ".png)";
+                    }
                     if (shocking) {
                         ac.moveTimer = 0;
                         missShock = false;
@@ -1490,28 +1563,57 @@ function ingame(dt, time) {
             }
         } else if (ac.name == "yenndo") {
             if (cams.opened) {
-                ac.camsOpened = true;
                 if (ac.active) {
-                    die("yenndo");
+                    ac.appeared = true;
+                }
+                ac.camsOpened = true;
+                if (charMode >=2) {
+                    if (ac.active) {
+                        die("yenndo");
+                    }
+                } else {
+                    if (ac.active) {
+                        ac.camsOpened = false;
+                    }
+                    ac.active = false;
                 }
             } else {
-                if (ac.camsOpened) {
-                    if (Math.random() < ac.difficulty / 20) {
-                        ac.active = true;
-                        ac.side = Math.round(Math.random()*2);
+                if (ac.camsOpened && !ac.appeared) {
+                    if (charMode < 3) {
+                        if (Math.random() < ac.difficulty / 60) {
+                            ac.active = true;
+                            ac.side = Math.round(Math.random()*2);
+                        }
+                    } else {
+                        if (Math.random() < ac.difficulty / 20) {
+                            ac.active = true;
+                            ac.side = Math.round(Math.random()*2);
+                        }
+                    }
+                    if (charMode < 2) {
+                        if (Math.random() < ac.difficulty / 60) {
+                            ac.active = true;
+                            ac.side = 1;
+                        }
                     }
                 }
                 ac.camsOpened = false;
+                ac.appeared = false;
             }
             if (ac.active) {
                 const bgRect = document.getElementById("officeBG");
                 ac.element.style.left = -(parseFloat(bgRect.style.backgroundPositionX) - 75 * ac.side-75) / 2 * window.innerHeight / 726 + "%";
                 ac.element.style.top = -(parseFloat(bgRect.style.backgroundPositionY)) / 4 + 20 + "%";
                 ac.element.style.display = "block";
-                if (doors[ac.side]) {
-                    ac.active = false;
+                if (charMode > 1) {
+                    if (doors[ac.side]) {
+                        ac.active = false;
+                    }
                 }
-                oxygen -= 45 * dt;
+                oxygen -= 45 * (charMode+15)/15 * dt;
+                if (charMode >= 3) {
+                    powerDrain += 0.25;
+                }
                 document.getElementById("oxygenWarning").style.display = "block";
             } else {
                 ac.element.style.display = "none";
@@ -1542,11 +1644,20 @@ function ingame(dt, time) {
                     ac.index++;
                     power++;
                     ac.sequence = Math.round(Math.random() * 3+1); // pp 7
-                    if (ac.index >= 3) {
-                        ac.moveTimer = 0;
-                        ac.index = 0;
-                        ac.killTimer = 0;
+                    if (charMode >= 3) {
+                        if (ac.index >= charMode) {
+                            ac.moveTimer = 0;
+                            ac.index = 0;
+                            ac.killTimer = 0;
+                        }
+                    } else {
+                        if (ac.index >= 3) {
+                            ac.moveTimer = 0;
+                            ac.index = 0;
+                            ac.killTimer = 0;
+                        }
                     }
+
                 }
                 sfx.lolbit.play();
                 ac.killTimer += dt * ac.killTimer+dt/8; // pp /2
@@ -1562,9 +1673,17 @@ function ingame(dt, time) {
                 }
             } else {
                 if (ac.camsOpened) {
-                    if (Math.random() < 0.2) {
-                        ac.active = true;
+                    if (charMode >= 2) {
+                        console.log(0.2 + charMode/10-0.1)
+                        if (Math.random() < 0.2 + charMode/10-0.1) {
+                            ac.active = true;
+                        }
+                    } else {
+                        if (Math.random() < 0.2) {
+                            ac.active = true;
+                        }
                     }
+
                 }
                 ac.camsOpened = false;
             }
@@ -1592,7 +1711,9 @@ function ingame(dt, time) {
             }
             if (ac.moveTimer >= ac.moveTime) {
                 ac.moveTimer = 0;
-                ac.minireenas.push([Math.round(Math.random()*6),0]);
+                for (let i = 0; i<charMode; i++) {
+                    ac.minireenas.push([Math.round(Math.random()*6),0]);
+                }
             }
             ac.element.style.display = "none";
             for (let a = 0; a<ac.minireenas.length; a++) {
@@ -1814,7 +1935,7 @@ function ingame(dt, time) {
             if (ac.moveTimer >= ac.moveTime) {
                 ac.element.style.display = "block";
                 const bgRect = document.getElementById("officeBG");
-                ac.element.style.left = -(parseFloat(bgRect.style.backgroundPositionX) - 115*ac.door-30) / 2 * window.innerHeight / 726 + "%";
+                ac.element.style.left = -(parseFloat(bgRect.style.backgroundPositionX) - 100*ac.door-30) / 2 * window.innerHeight / 726 + "%";
                 ac.element.style.top = -(parseFloat(bgRect.style.backgroundPositionY)) / 4 + 40 + "%";
                 if (doors[ac.door]) {
                     ac.leaveTimer += dt;

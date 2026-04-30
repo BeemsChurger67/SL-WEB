@@ -2068,7 +2068,6 @@ function ingame(dt, time) {
             } else {
                 ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult;
             }
-            ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult;
             ac.element.style.display = "none";
             ac.bambooElement.style.display = "none";
             if (ac.moveTimer >= ac.moveTime) {

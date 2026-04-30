@@ -293,8 +293,8 @@ let characters = [
         element: document.getElementById("goofyGoober"),
         description: "when you open cams he will slowly fade in. close cams to reset his killTimer",
         vHardDescription: "if you close cams goofy will slowly fade out instead of fading fully out instantly",
-        uHardDescription: "his killTimer is increased",
-        perfectDescription: "his killTimer is increased",
+        uHardDescription: "his killTimer is buffed",
+        perfectDescription: "his killTimer is buffed",
     },
     {
         name: "4_YT",
@@ -336,9 +336,9 @@ let characters = [
         difficulty: 0,
         element: document.getElementById("goldenFreddy"),
         description: "can appear when you close cams and you need to put the mask on or open cams",
-        vHardDescription: "appears faster",
-        uHardDescription: "if you open cams you die",
-        perfectDescription: "killTimer is almost instant so immediatly when you close cams put the mask on for a frame",
+        vHardDescription: "killTimer is shorter",
+        uHardDescription: "killTimer is shorter",
+        perfectDescription: "killTimer is shorter lol",
     },
     {
         name: "irl candy",
@@ -365,13 +365,15 @@ let characters = [
         killTime: 10,
         menuImg: "assets/characterSelect/pandimai.png",
         difficulty: 0,
+        amount: 2,
+        index: 0,
         cam: 0,
         element: document.getElementById("pandimai"),
         bambooElement: document.getElementById("bamboo"),
         description: "once he appears in the office you have to find bamboo in the cams",
         vHardDescription: "appears faster",
         uHardDescription: "killTimer is shorter",
-        perfectDescription: "once you click one bamboo you have to click the other one",
+        perfectDescription: "once you click one bamboo you have to click another one",
     },
     {
         name: "natrwqfsfasxc",
@@ -382,9 +384,9 @@ let characters = [
         difficulty: 0,
         element: document.getElementById("natrwqfsfasxc"),
         description: "he is in the office and his killTimer is increasing and you have to click him to reset his killTimer",
-        vHardDescription: "appears faster",
-        uHardDescription: "killTimer is shorter",
-        perfectDescription: "more movement opportunities",
+        vHardDescription: "killTimer is buffed and moves faster",
+        uHardDescription: "killTimer is buffed and moves faster",
+        perfectDescription: "killTimer is buffed, moves faster and a different movement opportunity",
     },
 ];
 let activeCharacters = [];
@@ -696,6 +698,15 @@ function checkMaxMode() {
             document.getElementById("modeName").textContent = maxModes[i][0];
         }
     }
+    let everyCharEnabled = 0;
+    for (let i = 0; i<characters.length; i++) {
+        if (characters[i].difficulty == 20) {
+            everyCharEnabled++;
+        }
+    }
+    if (everyCharEnabled == characters.length) {
+        difficultyModeName();
+    }
 }
 document.getElementById("characters").addEventListener("mousedown", (e) => {
     if (e.target.id.includes("pd_")) {
@@ -739,7 +750,7 @@ document.getElementById("characters").addEventListener("mousemove", (e) => {
     if (ingameDifficulty == "normal mode") {
         document.getElementById("charDescription").textContent = characters[e.target.id.match(/(\d+)/)[0]].description;
     } else if (ingameDifficulty == "hard mode") {
-        document.getElementById("charHardDescription").textContent = "MoveTimer goes faster";
+        document.getElementById("charHardDescription").textContent = "moveTimers are 1.5x faster or just buffed";
     } else if (ingameDifficulty == "very hard mode") {
         document.getElementById("charVHardDescription").textContent = characters[e.target.id.match(/(\d+)/)[0]].vHardDescription;
     } else if (ingameDifficulty == "ultra hard mode") {
@@ -923,9 +934,20 @@ document.getElementById("tripleTLure").addEventListener("mousedown", (e) => {
 document.getElementById("bamboo").addEventListener("mousedown", (e) => {
     for (let i = 0; i<activeCharacters.length; i++) {
         if (activeCharacters[i].name == "pandimai") {
-            activeCharacters[i].moveTimer = 0;
-            activeCharacters[i].killTimer = 0;
-            document.getElementById("bamboo").style.display = "none";
+            if (ingameDifficulty == "perfect mode") {
+                activeCharacters[i].index++;
+                activeCharacters[i].cam = Math.round(Math.random()*6);
+                activeCharacters[i].killTimer /= 4;
+                if (activeCharacters[i].index >= activeCharacters[i].amount) {
+                    activeCharacters[i].index = 0;
+                    activeCharacters[i].moveTimer = 0;
+                    activeCharacters[i].killTimer = 0;
+                }
+            } else {
+                activeCharacters[i].moveTimer = 0;
+                activeCharacters[i].killTimer = 0;
+                document.getElementById("bamboo").style.display = "none";
+            }
         }
     }
 });
@@ -1734,15 +1756,25 @@ function ingame(dt, time) {
                 ac.rng = Math.random() + 0.5;
             }
             if (charMode >= 1) {
-                ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult * 1.5;
+                if (charMode >= 3) {
+                    ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult * 1.8;
+                } else {
+                    ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult * 1.5;
+                }
             } else {
                 ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult;
             }
             if (ac.moveTimer >= ac.moveTime-4*(ac.difficulty / 18 +1) * nightMult * (charMode+4)/4 && ac.moveTimer <= ac.moveTime-3*(ac.difficulty / 18 +1) * nightMult * (charMode+4)/4) {
-                sfx.ntbVoiceLine.play();
+                if (charMode != 4) {
+                    sfx.ntbVoiceLine.play();
+                }
             }
             if (ac.moveTimer >= ac.moveTime) {
-                ac.killTimer += dt;
+                if (charMode >= 2) {
+                    ac.killTimer += dt * 1.25;
+                } else {
+                    ac.killTimer += dt;
+                }
                 sfx.ntb.play();
                 if (doors[1]) {
                     ac.leaveTimer += dt;
@@ -1765,17 +1797,46 @@ function ingame(dt, time) {
         } else if (ac.name == "glungus") {
             let percMouseX = mouse.x / window.innerWidth * 100;
             let percMouseY = mouse.y / window.innerHeight * 100;
-            ac.x = ac.x * (1 - dt * (ac.difficulty/10+1)) + percMouseX * dt * (ac.difficulty/10+1);
-            ac.y = ac.y * (1 - dt * (ac.difficulty/10+1)) + percMouseY * dt * (ac.difficulty/10+1);
+            ac.element.style.width = "5vh";
+            ac.element.style.height = "5vh";
+            if (charMode >= 1) {
+                if (charMode >= 2) {
+                    if (charMode >= 3) {
+                        ac.element.style.width = "7.5vh";
+                        ac.element.style.height = "7.5vh";
+                    }
+                    ac.x = ac.x * (1 - dt * (ac.difficulty/10+1) * 1.5) + percMouseX * dt * (ac.difficulty/10+1) * 1.5;
+                    ac.y = ac.y * (1 - dt * (ac.difficulty/10+1) * 1.5) + percMouseY * dt * (ac.difficulty/10+1) * 1.5;
+                } else {
+                    ac.x = ac.x * (1 - dt * (ac.difficulty/10+1) * 1.25) + percMouseX * dt * (ac.difficulty/10+1) * 1.25;
+                    ac.y = ac.y * (1 - dt * (ac.difficulty/10+1) * 1.25) + percMouseY * dt * (ac.difficulty/10+1) * 1.25;
+                }
+            } else {
+                ac.x = ac.x * (1 - dt * (ac.difficulty/10+1)) + percMouseX * dt * (ac.difficulty/10+1);
+                ac.y = ac.y * (1 - dt * (ac.difficulty/10+1)) + percMouseY * dt * (ac.difficulty/10+1);
+            }
             ac.element.style.left = ac.x + "vw";
             ac.element.style.top = ac.y + "vh";
             ac.element.style.display = "block";
         } else if (ac.name == "triple T") {
             if (ac.moveTimer === 0) {
                 ac.rng = Math.random() + 0.5;
+                if (charMode >= 2) {
+                    ac.killTime = 4;
+                } else {
+                    ac.killTime = 5;
+                }
             }
             if (charMode >= 1) {
-                ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult * 1.5;
+                if (charMode >= 3) {
+                    if (charMode >= 4) {
+                        ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult * 1.9;
+                    } else {
+                        ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult * 1.75;
+                    }
+                } else {
+                    ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult * 1.5;
+                }
             } else {
                 ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult;
             }
@@ -1789,9 +1850,22 @@ function ingame(dt, time) {
         } else if (ac.name == "plushtrap") {
             if (ac.moveTimer === 0) {
                 ac.rng = Math.random() + 0.5;
+                if (charMode >= 2) {
+                    ac.killTime = 4;
+                } else {
+                    ac.killTime = 5;
+                }
             }
             if (charMode >= 1) {
-                ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult * 1.5;
+                if (charMode >= 3) {
+                    if (charMode >= 4) {
+                        ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult * 1.9;
+                    } else {
+                        ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult * 1.75;
+                    }
+                } else {
+                    ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult * 1.5;
+                }
             } else {
                 ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult;
             }
@@ -1808,7 +1882,7 @@ function ingame(dt, time) {
                 } else {
                     ac.killTimer += dt;
                     if (ac.killTimer >= ac.killTime) {
-                        die("plushtrap")
+                        die("plushtrap");
                     }
                 }
             }
@@ -1817,9 +1891,20 @@ function ingame(dt, time) {
                 ac.rng = Math.random() + 0.5;
                 ac.cam = Math.round(Math.random() * 6);
                 ac.killTimer = 0;
+                if (charMode == 4) {
+                    ac.moveTimer = ac.moveTime;
+                }
             }
             if (charMode >= 1) {
-                ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult * 1.5;
+                if (charMode >= 2) {
+                    if (charMode >= 3) {
+                        ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult * 1.9;
+                    } else {
+                        ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult * 1.75;
+                    }
+                } else {
+                    ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult * 1.5;
+                }
             } else {
                 ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult;
             }
@@ -1827,7 +1912,11 @@ function ingame(dt, time) {
                 if (ac.killTimer === 0) {
                     sfx.damonSound.play();
                 }
-                ac.killTimer += dt;
+                if (charMode == 4) {
+                    ac.killTimer += dt / 2; 
+                } else {
+                    ac.killTimer += dt;
+                }
                 if (ac.killTimer >= ac.killTime) {
                     die("GRILLRAT.exe");
                 }
@@ -1855,7 +1944,17 @@ function ingame(dt, time) {
                 ac.element.style.opacity = ac.killTimer / ac.killTime;
                 ac.element.style.display = "block";
             } else {
-                ac.killTimer = 0;
+                if (charMode >= 2) {
+                    if (ac.killTimer >= 0) {
+                        if (charMode >= 1) {
+                            ac.killTimer -= dt * (ac.difficulty / 18+1) * nightMult * 1.5 * 2;
+                        } else {
+                            ac.killTimer -= dt * (ac.difficulty / 18+1) * nightMult * 2;
+                        }
+                    }
+                } else {
+                    ac.killTimer = 0;
+                }
                 ac.element.style.display = "none";
             }
         } else if (ac.name == "4_YT") {
@@ -1881,7 +1980,7 @@ function ingame(dt, time) {
                 ac.element.style.display = "block";
                 sfx.buzzSound.play();
                 if (mask) {
-                    ac.leaveTimer += dt;
+                    ac.leaveTimer += dt * (charMode+5)/5;
                     if (ac.leaveTimer >= ac.leaveTime) {
                         ac.leaveTimer = 0;
                         ac.killTimer = 0;
@@ -1914,7 +2013,7 @@ function ingame(dt, time) {
                 ac.element.style.left = -(parseFloat(bgRect.style.backgroundPositionX) - 170) / 2 * window.innerHeight / 726 + "%";
                 ac.element.style.top = -(parseFloat(bgRect.style.backgroundPositionY)) / 4 + 20 + "%";
                 ac.element.style.display = "block";
-                ac.killTimer += dt;
+                ac.killTimer += dt * (charMode-2)/2;
                 if (mask) {
                     ac.active = false;
                     ac.killTimer = 0;
@@ -1960,7 +2059,16 @@ function ingame(dt, time) {
                 ac.rng = Math.random() + 0.5;
                 ac.cam = Math.round(Math.random()*6);
             }
-            ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult * (charMode+4)/4;
+            if (charMode >= 1) {
+                if (charMode >= 2) {
+                    ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult * 1.75;
+                } else {
+                    ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult * 1.5;
+                }
+            } else {
+                ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult;
+            }
+            ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult;
             ac.element.style.display = "none";
             ac.bambooElement.style.display = "none";
             if (ac.moveTimer >= ac.moveTime) {
@@ -1973,16 +2081,25 @@ function ingame(dt, time) {
                 } else {
                     ac.bambooElement.style.display = "none";
                 }
-                ac.killTimer += dt;
+                if (charMode >= 3) {
+                    ac.killTimer += dt * 1.15;
+                } else {
+                    ac.killTimer += dt;
+                }
                 if (ac.killTimer >= ac.killTime) {
                     die("pandimai");
                 }
             }
         } else if (ac.name == "natrwqfsfasxc") {
             ac.element.style.display = "block";
-            ac.timer += dt * nightMult * (charMode+4)/4;
-            ac.element.style.transform = `translate(calc(-50% + ${Math.sin(ac.timer)*50}vh),calc(-50% + ${Math.sin(ac.timer) * Math.cos(ac.timer)*50}vh))`;
-            ac.killTimer += dt * (ac.difficulty / 18+1) * (charMode+8)/8;
+            ac.timer += dt * nightMult * (charMode+7)/7;
+            if (charMode == 4) {
+                ac.element.style.transform = `translate(calc(-50% + ${Math.sin(ac.timer)*50}vh),calc(-50% + ${Math.sin(ac.timer) * Math.cos(ac.timer*2)*50}vh))`;
+            } else {
+                ac.element.style.transform = `translate(calc(-50% + ${Math.sin(ac.timer)*50}vh),calc(-50% + ${Math.sin(ac.timer) * Math.cos(ac.timer)*50}vh))`;
+            }
+
+            ac.killTimer += dt * (ac.difficulty / 18+1) * (charMode+4)/4;
             ac.element.style.filter = `brightness(${ac.killTimer / ac.killTime * 15})`;
             if (ac.killTimer >= ac.killTime) {
                 die("natrwqfsfasxc");

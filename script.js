@@ -2003,7 +2003,17 @@ function ingame(dt, time) {
             } else {
                 if (ac.camsOpened) {
                     if (Math.random() < ac.difficulty / 40) {
-                        ac.active = true;
+                        let yenndoActive = false;
+                        for (let i = 0; i<activeCharacters.length; i++) {
+                            if (activeCharacters[i].name == "yenndo") {
+                                if (activeCharacters[i].active) {
+                                    yenndoActive = true;
+                                }
+                            }
+                        }
+                        if (!yenndoActive) {
+                            ac.active = true;
+                        }   
                     }
                 }
                 ac.camsOpened = false;

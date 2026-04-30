@@ -1851,9 +1851,9 @@ function ingame(dt, time) {
             if (ac.moveTimer === 0) {
                 ac.rng = Math.random() + 0.5;
                 if (charMode >= 2) {
-                    ac.killTime = 4;
+                    ac.killTime = 9;
                 } else {
-                    ac.killTime = 5;
+                    ac.killTime = 10;
                 }
             }
             if (charMode >= 1) {

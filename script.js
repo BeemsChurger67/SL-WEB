@@ -806,7 +806,6 @@ let shocking = false;
 let shockTransition = 0;
 window.addEventListener("keydown", (e) => {
     keys[e.key.toLowerCase()] = true;
-    console.log(e.key.toLowerCase());
     if (e.key.toLowerCase() == "escape") {
         scene = "menu";
     }
@@ -1297,7 +1296,6 @@ function ingame(dt, time) {
                     sound[ac.side].currentTime = 0;
                     sound[ac.side].pause();
                     sound[ac.side].play();
-                    console.log(ac.side);
                 }
                 ac.killTimer += dt / 100;
                 if (doors[ac.side*2]) {
@@ -1376,7 +1374,6 @@ function ingame(dt, time) {
                 if (charMode == 2) {
                     if (doors[ac.finalPhase*2]) {
                         ac.leaveTimer += dt;
-                        console.log(ac.leaveTimer);
                         if (ac.leaveTimer >= ac.leaveTime) {
                             ac.leaveTimer = 0;
                             ac.killTimer = 0;
@@ -1395,8 +1392,6 @@ function ingame(dt, time) {
                 } else if (charMode >= 3) {
                     if (doors[ac.finalPhase]) {
                         ac.leaveTimer += dt;
-                        console.log(ac.finalPhase);
-                        console.log(ac.leaveTimer);
                         if (ac.leaveTimer >= ac.leaveTime) {
                             ac.leaveTimer = 0;
                             ac.killTimer = 0;
@@ -1415,7 +1410,6 @@ function ingame(dt, time) {
                 } else {
                     if (doors[2]) {
                         ac.leaveTimer += dt;
-                        console.log(ac.leaveTimer);
                         if (ac.leaveTimer >= ac.leaveTime) {
                             ac.leaveTimer = 0;
                             ac.killTimer = 0;
@@ -1559,6 +1553,8 @@ function ingame(dt, time) {
             }
             if (charMode >= 1) {
                 ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult * 1.5;
+            } else {
+                ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult;
             }
             if (charMode >= 2) {
                 ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult * 2;
@@ -1696,7 +1692,6 @@ function ingame(dt, time) {
             } else {
                 if (ac.camsOpened) {
                     if (charMode >= 2) {
-                        console.log(0.2 + charMode/10-0.1)
                         if (Math.random() < 0.2 + charMode/10-0.1) {
                             ac.active = true;
                         }
@@ -2264,7 +2259,7 @@ function save() {
 function load() {
     let data = localStorage.getItem("dataSL");
     let dataParsed = JSON.parse(data);
-    console.log(dataParsed)
+    console.log(dataParsed);
     if (dataParsed == null) return;
     if (dataParsed.pirate !== undefined) pirate = dataParsed.pirate;
     if (dataParsed.playtime !== undefined) playtime = dataParsed.playtime;

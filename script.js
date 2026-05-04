@@ -950,6 +950,19 @@ document.getElementById("bamboo").addEventListener("mousedown", (e) => {
         }
     }
 });
+let hoveringOverGlungus = false;
+document.getElementById("glungus").addEventListener("mouseenter", (e) => {
+    if (ingameDifficulty === "perfect mode") {
+        hoveringOverGlungus = true;
+        console.log("afsd");
+    }
+});
+document.getElementById("glungus").addEventListener("mouseleave", (e) => {
+    if (ingameDifficulty === "perfect mode") {
+        hoveringOverGlungus = false;
+        console.log("afsd");
+    }
+});
 document.getElementById("natrwqfsfasxc").addEventListener("mousedown", (e) => {
     for (let i = 0; i<activeCharacters.length; i++) {
         if (activeCharacters[i].name == "natrwqfsfasxc") {
@@ -979,6 +992,7 @@ function ingame(dt, time) {
         charMode = 4;
     }
     if (!firstFrame[1]) {
+        hoveringOverGlungus = false;
         resetFF();
         firstFrame[1] = true;
         powerOutFrame = false;
@@ -1027,6 +1041,9 @@ function ingame(dt, time) {
             sfx[key].currentTime = 0;
         }
     }
+    if (hoveringOverGlungus) {
+        oxygen -= dt * 18;
+    }
     playtime += dt;
     ingameTimer += dt;
     let seconds = ingameTimer % 60;
@@ -1047,8 +1064,8 @@ function ingame(dt, time) {
         }
     }
     if (cams.opened) {powerDrain++};
-    const secondsPace = power / startingPower * 360 % 60;
-    const minutesPace = power / startingPower * 360 / 60;
+    const secondsPace = 60 - power / startingPower * 360 % 60;
+    const minutesPace = 6 - power / startingPower * 360 / 60;
     if (power >= 0) {
         document.getElementById("powerPace").textContent = "Pace: " + Math.floor(minutesPace) + (secondsPace > 10 ? ":" : ":0") + Math.floor(secondsPace);
     } else {
@@ -1619,9 +1636,17 @@ function ingame(dt, time) {
                 ac.appeared = false;
             }
             if (ac.active) {
-                const bgRect = document.getElementById("officeBG");
-                ac.element.style.left = -(parseFloat(bgRect.style.backgroundPositionX) - 75 * ac.side-75) / 2 * window.innerHeight / 726 + "%";
-                ac.element.style.top = -(parseFloat(bgRect.style.backgroundPositionY)) / 4 + 20 + "%";
+                const bg = document.getElementById("officeBG");
+                const style = getComputedStyle(bg);
+                const bgRect = bg.getBoundingClientRect();
+                const bgPosX = parseFloat(style.backgroundPositionX) || 0;
+                const aspect = 1900 / 800;
+                const bgHeight = bgRect.height * 1.25;
+                const bgWidth = bgHeight * aspect;
+                const maxOffset = bgWidth - bgRect.width;
+                const offsetX = (bgPosX / 100) * maxOffset;
+                ac.element.style.transform = `translate(calc(${-offsetX}px + ${ac.side * 100 - 100}%), 0)`;
+                ac.element.style.top = -(parseFloat(bg.style.backgroundPositionY)) / 4 + 40 + "%";
                 ac.element.style.display = "block";
                 if (charMode > 1) {
                     if (doors[ac.side]) {
@@ -1969,9 +1994,17 @@ function ingame(dt, time) {
             }
             ac.element.style.display = "none";
             if (ac.moveTimer >= ac.moveTime) {
-                const bgRect = document.getElementById("officeBG");
-                ac.element.style.left = -(parseFloat(bgRect.style.backgroundPositionX)-100) / 2 * window.innerHeight / 726 + "%";
-                ac.element.style.top = -(parseFloat(bgRect.style.backgroundPositionY) +60) / 4 + 20 + "%";
+                const bg = document.getElementById("officeBG");
+                const style = getComputedStyle(bg);
+                const bgRect = bg.getBoundingClientRect();
+                const bgPosX = parseFloat(style.backgroundPositionX) || 0;
+                const aspect = 1900 / 800;
+                const bgHeight = bgRect.height * 1.25;
+                const bgWidth = bgHeight * aspect;
+                const maxOffset = bgWidth - bgRect.width;
+                const offsetX = (bgPosX / 100) * maxOffset;
+                ac.element.style.transform = `translate(calc(${-offsetX}px - 75%), -10%)`;
+                ac.element.style.top = -(parseFloat(bg.style.backgroundPositionY)) / 4 + 40 + "%";
                 ac.element.style.display = "block";
                 sfx.buzzSound.play();
                 if (mask) {
@@ -2014,9 +2047,17 @@ function ingame(dt, time) {
                 ac.camsOpened = false;
             }
             if (ac.active) {
-                const bgRect = document.getElementById("officeBG");
-                ac.element.style.left = -(parseFloat(bgRect.style.backgroundPositionX) - 170) / 2 * window.innerHeight / 726 + "%";
-                ac.element.style.top = -(parseFloat(bgRect.style.backgroundPositionY)) / 4 + 20 + "%";
+                const bg = document.getElementById("officeBG");
+                const style = getComputedStyle(bg);
+                const bgRect = bg.getBoundingClientRect();
+                const bgPosX = parseFloat(style.backgroundPositionX) || 0;
+                const aspect = 1900 / 800;
+                const bgHeight = bgRect.height * 1.25;
+                const bgWidth = bgHeight * aspect;
+                const maxOffset = bgWidth - bgRect.width;
+                const offsetX = (bgPosX / 100) * maxOffset;
+                ac.element.style.transform = `translate(${-offsetX}px, 0)`;
+                ac.element.style.top = -(parseFloat(bg.style.backgroundPositionY)) / 4 + 40 + "%";
                 ac.element.style.display = "block";
                 ac.killTimer += dt * (charMode-2)/2;
                 if (mask) {
@@ -2035,12 +2076,19 @@ function ingame(dt, time) {
                 ac.door = Math.round(Math.random())*2;
             }
             ac.moveTimer += dt * (ac.difficulty / 18+1) * ac.rng * nightMult * (charMode+4)/4;
-            ac.element.style.display = "none";
             if (ac.moveTimer >= ac.moveTime) {
                 ac.element.style.display = "block";
-                const bgRect = document.getElementById("officeBG");
-                ac.element.style.left = -(parseFloat(bgRect.style.backgroundPositionX) - 100*ac.door-30) / 2 * window.innerHeight / 726 + "%";
-                ac.element.style.top = -(parseFloat(bgRect.style.backgroundPositionY)) / 4 + 40 + "%";
+                const bg = document.getElementById("officeBG");
+                const style = getComputedStyle(bg);
+                const bgRect = bg.getBoundingClientRect();
+                const bgPosX = parseFloat(style.backgroundPositionX) || 0;
+                const aspect = 1900 / 800;
+                const bgHeight = bgRect.height * 1.25;
+                const bgWidth = bgHeight * aspect;
+                const maxOffset = bgWidth - bgRect.width;
+                const offsetX = (bgPosX / 100) * maxOffset;
+                ac.element.style.transform = `translate(calc(${-offsetX}px + ${ac.door*270-190}%), 30%)`;
+                ac.element.style.top = -(parseFloat(bg.style.backgroundPositionY)) / 4 + 40 + "%";
                 if (doors[ac.door]) {
                     ac.leaveTimer += dt;
                     ac.element.style.display = "none";
@@ -2058,6 +2106,8 @@ function ingame(dt, time) {
                         die("irl candy");
                     }
                 }
+            } else {
+                ac.element.style.display = "none";
             }
         } else if (ac.name == "pandimai") {
             if (ac.moveTimer == 0) {
@@ -2077,9 +2127,17 @@ function ingame(dt, time) {
             ac.bambooElement.style.display = "none";
             if (ac.moveTimer >= ac.moveTime) {
                 ac.element.style.display = "block";
-                const bgRect = document.getElementById("officeBG");
-                ac.element.style.left = -(parseFloat(bgRect.style.backgroundPositionX) - 50) / 2 * window.innerHeight / 726 + "%";
-                ac.element.style.top = -(parseFloat(bgRect.style.backgroundPositionY)) / 4 + 40 + "%";
+                const bg = document.getElementById("officeBG");
+                const style = getComputedStyle(bg);
+                const bgRect = bg.getBoundingClientRect();
+                const bgPosX = parseFloat(style.backgroundPositionX) || 0;
+                const aspect = 1900 / 800;
+                const bgHeight = bgRect.height * 1.25;
+                const bgWidth = bgHeight * aspect;
+                const maxOffset = bgWidth - bgRect.width;
+                const offsetX = (bgPosX / 100) * maxOffset;
+                ac.element.style.transform = `translate(calc(${-offsetX}px - 60%), 30%)`;
+                ac.element.style.top = -(parseFloat(bg.style.backgroundPositionY)) / 4 + 40 + "%";
                 if (cams.opened && cams.cam == ac.cam) {
                     ac.bambooElement.style.display = "block";
                 } else {

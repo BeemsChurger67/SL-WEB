@@ -2228,7 +2228,7 @@ function ingame(dt, time) {
             document.getElementById("officeBG").style.backgroundImage = "url(assets/office/"+officeFrame+".png)";
         }
     }
-    power -= powerDrain * dt / 2;
+    power -= powerDrain * dt / 3;
 }
 function menu(dt, time) {
     if (!firstFrame[0]) {
